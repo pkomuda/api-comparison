@@ -3,10 +3,11 @@ package pl.dmcs.entity;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -35,4 +36,32 @@ public class Account extends PanacheEntity {
     private String lastName;
 
     private boolean active;
+
+    private boolean confirmed;
+
+    @Version
+    private Long version;
+
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "account")
+    private Set<AccessLevel> accessLevels = new HashSet<>();
+
+    public void addAccessLevels(Set<String> names) {
+        AccessLevel.ACCESS_LEVEL_NAMES.stream()
+                .filter(names::contains)
+                .map(name -> AccessLevel.builder()
+                        .name(name)
+                        .active(true)
+                        .account(this)
+                        .build())
+                .forEach(accessLevel -> accessLevels.add(accessLevel));
+        AccessLevel.ACCESS_LEVEL_NAMES.stream()
+                .filter(name -> !names.contains(name))
+                .map(name -> AccessLevel.builder()
+                        .name(name)
+                        .active(false)
+                        .account(this)
+                        .build())
+                .forEach(accessLevel -> accessLevels.add(accessLevel));
+    }
 }
