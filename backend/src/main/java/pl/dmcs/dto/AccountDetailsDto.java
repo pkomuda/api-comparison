@@ -8,10 +8,9 @@ import java.util.Set;
 
 @Data
 @Builder
-public class AccountDto {
+public class AccountDetailsDto {
 
     private String username;
-    private String password;
     private String email;
     private String firstName;
     private String lastName;

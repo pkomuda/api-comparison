@@ -20,6 +20,10 @@ public class AccountRepository implements PanacheRepository<Account> {
         return find("username", username).firstResultOptional();
     }
 
+    public Optional<Account> findByConfirmationToken(String token) {
+        return find("confirmationToken", token).firstResultOptional();
+    }
+
     public AccountPages find(String query, String sort, String dir, int page, int size) {
         Sort.Direction direction = dir.equals("desc") ? Sort.Direction.Descending : Sort.Direction.Ascending;
         Sort sorting = sort.isEmpty() ? Sort.empty() : Sort.by(sort, direction);

@@ -33,34 +33,43 @@ public class AccountEndpoint {
         accountService.register(registerDto);
     }
 
+    @PUT
+    @Path("/confirm/{token}")
+    public void confirmAccount(@PathParam("token") String token) {
+        accountService.confirmAccount(token);
+    }
+
     @POST
     @Path("/account")
+    @RolesAllowed("admin")
     public void addAccount(AddAccountDto addAccountDto) {
         accountService.addAccount(addAccountDto);
     }
 
     @GET
     @Path("/account/{username}")
-    public AccountDto getAccount(@PathParam("username") String username) {
+    @RolesAllowed("admin")
+    public AccountDetailsDto getAccount(@PathParam("username") String username) {
         return accountService.getAccount(username);
     }
 
     @GET
     @Path("/account")
     @RolesAllowed({"admin", "user"})
-    public AccountDto getAccount(@Context SecurityContext context) {
+    public AccountDetailsDto getAccount(@Context SecurityContext context) {
         return accountService.getAccount(context.getUserPrincipal().getName());
     }
 
     @GET
     @Path("/allAccounts")
     @RolesAllowed("admin")
-    public List<AccountDto> getAllAccounts() {
+    public List<AccountDetailsDto> getAllAccounts() {
         return accountService.getAllAccounts();
     }
 
     @GET
     @Path("/accounts")
+    @RolesAllowed("admin")
     public AccountPagesDto getAccounts(@DefaultValue("") @QueryParam("query") String query,
                                        @DefaultValue("") @QueryParam("sort") String sort,
                                        @DefaultValue("asc") @QueryParam("dir") String dir,
@@ -71,19 +80,21 @@ public class AccountEndpoint {
 
     @PUT
     @Path("/account/{username}")
-    public void editAccount(@PathParam("username") String username, AccountDto accountDto) {
-        accountService.editAccount(username, accountDto);
+    @RolesAllowed("admin")
+    public void editAccount(@PathParam("username") String username, AccountDetailsDto accountDetailsDto) {
+        accountService.editAccount(username, accountDetailsDto);
     }
 
     @PUT
     @Path("/account")
     @RolesAllowed({"admin", "user"})
-    public void editAccount(@Context SecurityContext context, AccountDto accountDto) {
-        accountService.editAccount(context, accountDto);
+    public void editAccount(@Context SecurityContext context, AccountDetailsDto accountDetailsDto) {
+        accountService.editAccount(context, accountDetailsDto);
     }
 
     @PUT
     @Path("/changePassword")
+    @RolesAllowed({"admin", "user"})
     public void changePassword(ChangePasswordDto changePasswordDto) {
         accountService.changePassword(changePasswordDto);
     }

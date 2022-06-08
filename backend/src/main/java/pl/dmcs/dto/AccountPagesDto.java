@@ -9,6 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 public class AccountPagesDto {
 
-    private List<AccountDto> accounts;
+    private List<AccountDetailsDto> accounts;
     private int pageCount;
 }

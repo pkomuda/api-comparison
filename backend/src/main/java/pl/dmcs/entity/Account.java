@@ -39,6 +39,9 @@ public class Account extends PanacheEntity {
 
     private boolean confirmed;
 
+    @Column(unique = true)
+    private String confirmationToken;
+
     @Version
     private Long version;
 

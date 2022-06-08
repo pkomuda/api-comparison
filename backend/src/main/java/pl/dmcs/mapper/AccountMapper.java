@@ -1,7 +1,8 @@
 package pl.dmcs.mapper;
 
+import io.quarkus.elytron.security.common.BcryptUtil;
 import lombok.experimental.UtilityClass;
-import pl.dmcs.dto.AccountDto;
+import pl.dmcs.dto.AccountDetailsDto;
 import pl.dmcs.dto.AccountPagesDto;
 import pl.dmcs.dto.AddAccountDto;
 import pl.dmcs.dto.RegisterDto;
@@ -16,36 +17,36 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class AccountMapper {
 
-    public Account toEntity(AddAccountDto dto) {
+    public Account toAccount(RegisterDto registerDto) {
         return Account.builder()
-                .username(dto.getUsername())
-                .password(dto.getPassword())
-                .email(dto.getEmail())
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .active(dto.isActive())
+                .username(registerDto.getUsername())
+                .password(BcryptUtil.bcryptHash(registerDto.getPassword()))
+                .email(registerDto.getEmail())
+                .firstName(registerDto.getFirstName())
+                .lastName(registerDto.getLastName())
                 .build();
     }
 
-    public Account toEntity(RegisterDto dto) {
+    public Account toAccount(AddAccountDto addAccountDto) {
         return Account.builder()
-                .username(dto.getUsername())
-                .password(dto.getPassword())
-                .email(dto.getEmail())
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
+                .username(addAccountDto.getUsername())
+                .password(BcryptUtil.bcryptHash(addAccountDto.getPassword()))
+                .email(addAccountDto.getEmail())
+                .firstName(addAccountDto.getFirstName())
+                .lastName(addAccountDto.getLastName())
+                .active(addAccountDto.isActive())
                 .build();
     }
 
-    public AccountDto toDto(Account entity) {
-        return AccountDto.builder()
-                .username(entity.getUsername())
-                .email(entity.getEmail())
-                .firstName(entity.getFirstName())
-                .lastName(entity.getLastName())
-                .active(entity.isActive())
-                .confirmed(entity.isConfirmed())
-                .accessLevels(entity.getAccessLevels().stream()
+    public AccountDetailsDto toAccountDetailsDto(Account account) {
+        return AccountDetailsDto.builder()
+                .username(account.getUsername())
+                .email(account.getEmail())
+                .firstName(account.getFirstName())
+                .lastName(account.getLastName())
+                .active(account.isActive())
+                .confirmed(account.isConfirmed())
+                .accessLevels(account.getAccessLevels().stream()
                         .filter(AccessLevel::isActive)
                         .map(AccessLevel::getName)
                         .sorted()
@@ -53,13 +54,13 @@ public class AccountMapper {
                 .build();
     }
 
-    public List<AccountDto> toDtos(List<Account> entities) {
-        return entities.stream()
-                .map(AccountMapper::toDto)
+    public List<AccountDetailsDto> toAccountDetailsDtos(List<Account> accounts) {
+        return accounts.stream()
+                .map(AccountMapper::toAccountDetailsDto)
                 .toList();
     }
 
-    public AccountPagesDto toDtoPages(AccountPages pages) {
-        return new AccountPagesDto(toDtos(pages.getAccounts()), pages.getPageCount());
+    public AccountPagesDto toAccountPagesDto(AccountPages accountPages) {
+        return new AccountPagesDto(toAccountDetailsDtos(accountPages.getAccounts()), accountPages.getPageCount());
     }
 }
