@@ -7,7 +7,7 @@ import pl.dmcs.exception.ApplicationException;
 
 import static org.jboss.resteasy.reactive.RestResponse.Status.BAD_REQUEST;
 import static org.jboss.resteasy.reactive.RestResponse.Status.INTERNAL_SERVER_ERROR;
-import static pl.dmcs.exception.ApplicationException.KEY_DEFAULT;
+import static pl.dmcs.exception.ApplicationException.DEFAULT_ERROR;
 
 @Slf4j
 public class ExceptionMapper {
@@ -18,7 +18,7 @@ public class ExceptionMapper {
         if (t instanceof ApplicationException) {
             return RestResponse.status(BAD_REQUEST, t.getMessage());
         } else {
-            return RestResponse.status(INTERNAL_SERVER_ERROR, KEY_DEFAULT);
+            return RestResponse.status(INTERNAL_SERVER_ERROR, DEFAULT_ERROR);
         }
     }
 }

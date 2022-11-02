@@ -3,6 +3,7 @@ package pl.dmcs.rest;
 import lombok.RequiredArgsConstructor;
 import pl.dmcs.dto.*;
 import pl.dmcs.service.AccountService;
+import pl.dmcs.util.Page;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -70,11 +71,11 @@ public class AccountEndpoint {
     @GET
     @Path("/accounts")
     @RolesAllowed("admin")
-    public AccountPagesDto getAccounts(@DefaultValue("") @QueryParam("query") String query,
-                                       @DefaultValue("") @QueryParam("sort") String sort,
-                                       @DefaultValue("asc") @QueryParam("dir") String dir,
-                                       @DefaultValue("0") @QueryParam("page") int page,
-                                       @DefaultValue("10") @QueryParam("size") int size) {
+    public Page<AccountDetailsDto> getAccounts(@DefaultValue("") @QueryParam("query") String query,
+                                               @DefaultValue("") @QueryParam("sort") String sort,
+                                               @DefaultValue("asc") @QueryParam("dir") String dir,
+                                               @DefaultValue("0") @QueryParam("page") int page,
+                                               @DefaultValue("10") @QueryParam("size") int size) {
         return accountService.getAccounts(query, sort, dir, page, size);
     }
 

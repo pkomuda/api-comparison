@@ -3,12 +3,10 @@ package pl.dmcs.mapper;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import lombok.experimental.UtilityClass;
 import pl.dmcs.dto.AccountDetailsDto;
-import pl.dmcs.dto.AccountPagesDto;
 import pl.dmcs.dto.AddAccountDto;
 import pl.dmcs.dto.RegisterDto;
 import pl.dmcs.entity.AccessLevel;
 import pl.dmcs.entity.Account;
-import pl.dmcs.entity.AccountPages;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -58,9 +56,5 @@ public class AccountMapper {
         return accounts.stream()
                 .map(AccountMapper::toAccountDetailsDto)
                 .toList();
-    }
-
-    public AccountPagesDto toAccountPagesDto(AccountPages accountPages) {
-        return new AccountPagesDto(toAccountDetailsDtos(accountPages.getAccounts()), accountPages.getPageCount());
     }
 }

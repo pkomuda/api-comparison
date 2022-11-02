@@ -2,16 +2,16 @@ package pl.dmcs.exception;
 
 public class ApplicationException extends RuntimeException {
 
-    public static final String KEY_DEFAULT = "error.default";
-    public static final String KEY_ACCOUNT_EXISTS = "error.account.exists";
-    public static final String KEY_ACCOUNT_NOT_FOUND = "error.account.not.found";
-    public static final String KEY_ACCESS_LEVELS_EMPTY = "error.access.levels.empty";
-    public static final String KEY_USERNAMES_NOT_MATCHING = "error.usernames.not.matching";
-    public static final String KEY_PASSWORDS_NOT_MATCHING = "error.passwords.not.matching";
-    public static final String KEY_LOGIN_FAILED = "error.login.failed";
+    public static final String DEFAULT_ERROR = "An unexpected error occurred";
+    public static final String ACCOUNT_EXISTS = "Account already exists";
+    public static final String ACCOUNT_NOT_FOUND = "Account not found";
+    public static final String ACCESS_LEVELS_EMPTY = "Access levels cannot be empty";
+    public static final String USERNAMES_NOT_MATCHING = "Usernames are not matching";
+    public static final String PASSWORDS_NOT_MATCHING = "Passwords are not matching";
+    public static final String LOGIN_FAILED = "Login failed";
 
     public ApplicationException() {
-        super(KEY_DEFAULT);
+        super(DEFAULT_ERROR);
     }
 
     public ApplicationException(String message) {
@@ -23,6 +23,6 @@ public class ApplicationException extends RuntimeException {
     }
 
     public ApplicationException(Throwable cause) {
-        super(KEY_DEFAULT, cause);
+        super(DEFAULT_ERROR, cause);
     }
 }
