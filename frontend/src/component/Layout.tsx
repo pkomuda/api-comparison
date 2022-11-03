@@ -1,27 +1,29 @@
 import { SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { AccessLevel, AccessLevelContext } from '@context/AccessLevelContext';
+import { Api, ApiContext } from '@context/ApiContext';
+import { AuthContext } from '@context/AuthContext';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout as AntLayout, Menu } from 'antd';
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../AuthContext';
-import { Link } from 'react-router-dom';
+import { Layout as AntLayout, Menu } from 'antd';
+import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import Cookies from 'js-cookie';
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 
 export const Layout = (props: { children: React.ReactElement }) => {
 
     const [auth, setAuth] = useContext(AuthContext);
-    const [api, setApi] = useState(localStorage.getItem('api') || 'rest');
-    const [language, setLanguage] = useState(localStorage.getItem('language') || 'en');
+    const [accessLevel, setAccessLevel] = useContext(AccessLevelContext);
+    const [, setApi] = useContext(ApiContext);
     const { Header, Content, Sider } = AntLayout;
 
-    const handleChangeApi = (value: string) => {
-        setApi(value);
-        localStorage.setItem('api', value);
-        location.replace('/');
+    const handleChangeAccessLevel = (value: AccessLevel) => {
+        setAccessLevel(value);
     };
 
-    const handleChangeLanguage = (value: string) => {
-        setLanguage(value);
-        localStorage.setItem('language', value);
+    const handleChangeApi = (value: Api) => {
+        localStorage.setItem('api', value);
+        setApi(value);
+        // location.replace('/');
     };
 
     const handleLogout = () => {
@@ -32,7 +34,7 @@ export const Layout = (props: { children: React.ReactElement }) => {
         });
     };
 
-    const getUserLinks = () => {
+    const getUserItems = (): ItemType[] => {
         if (auth.upn) {
             return [
                 {
@@ -52,16 +54,46 @@ export const Layout = (props: { children: React.ReactElement }) => {
                 }
             ]
         }
-    }
+    };
 
-    const sideItems: MenuProps['items'] = [
-        {
+    const getSideItems = (): MenuProps['items'] => {
+        const user = {
             key: 'user',
             icon: React.createElement(UserOutlined),
             label: auth.upn || 'Guest',
-            children: getUserLinks()
+            children: getUserItems(),
+        };
+
+        if (auth.groups.length > 1) {
+            return [
+                user,
+                {
+                    label: accessLevel.charAt(0).toUpperCase() + accessLevel.slice(1),
+                    key: 'accessLevel',
+                    children: [
+                        {
+                            type: 'group',
+                            label: 'Access level',
+                            children: [
+                                {
+                                    label: 'Admin',
+                                    key: 'Admin',
+                                    onClick: () => handleChangeAccessLevel('admin')
+                                },
+                                {
+                                    label: 'Client',
+                                    key: 'Client',
+                                    onClick: () => handleChangeAccessLevel('client')
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        } else {
+            return [user];
         }
-    ];
+    }
 
     const topItems: MenuProps['items'] = [
         {
@@ -89,25 +121,6 @@ export const Layout = (props: { children: React.ReactElement }) => {
                             onClick: () => handleChangeApi('grpc')
                         }
                     ]
-                },
-                {
-                    type: 'divider'
-                },
-                {
-                    type: 'group',
-                    label: 'Language',
-                    children: [
-                        {
-                            label: 'EN',
-                            key: 'en',
-                            onClick: () => handleChangeLanguage('en')
-                        },
-                        {
-                            label: 'PL',
-                            key: 'pl',
-                            onClick: () => handleChangeLanguage('pl')
-                        }
-                    ]
                 }
             ]
         }
@@ -116,25 +129,25 @@ export const Layout = (props: { children: React.ReactElement }) => {
     return (
         <AntLayout style={{minHeight: '100vh'}}>
             <Header className="header">
-                <Link to="/" className="logo">API Comparison</Link>
-                <Menu theme="dark" mode="horizontal" selectedKeys={[api, language]} items={topItems} disabledOverflow/>
+                <Link to="/" className="logo">
+                    <img src="src/favicon.svg" alt="logo" width="48px" height="48px"/>
+                    <span>API Comparison</span>
+                </Link>
+                <Menu theme="dark" mode="horizontal" items={topItems} disabledOverflow/>
             </Header>
             <AntLayout>
                 <Sider width={200} className="site-layout-background">
                     <Menu
                         mode="inline"
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
+                        defaultOpenKeys={['user']}
                         style={{height: '100%', borderRight: 0}}
-                        items={sideItems}
+                        items={getSideItems()}
                     />
                 </Sider>
                 <AntLayout style={{padding: '0 24px 24px'}}>
-                    <Breadcrumb style={{margin: '16px 0'}}>
-                        <Breadcrumb.Item>Home</Breadcrumb.Item>
-                        <Breadcrumb.Item>List</Breadcrumb.Item>
-                        <Breadcrumb.Item>App</Breadcrumb.Item>
-                    </Breadcrumb>
+                    {/*<Breadcrumb style={{margin: '16px 0'}}>*/}
+                    {/*    <Breadcrumb.Item>Home</Breadcrumb.Item>*/}
+                    {/*</Breadcrumb>*/}
                     <Content
                         className="site-layout-background"
                         style={{

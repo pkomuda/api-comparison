@@ -1,6 +1,6 @@
-import { AccountRestService } from './AccountRestService';
+import { AccountRestService } from '@service/AccountRestService';
 // import { AccountGrpcService } from './AccountGrpcService';
-import { AccountService } from './AccountService';
+import { AccountService } from '@service/AccountService';
 
 export class AccountServiceFactory {
 

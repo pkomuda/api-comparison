@@ -1,25 +1,31 @@
-import React, { useContext, useState } from 'react';
-import { Button, Form, Input, message } from 'antd';
+import { AccessLevel, AccessLevelContext } from '@context/AccessLevelContext';
+import { AuthContext, Token } from '@context/AuthContext';
 import { LoginDto } from '@dto/LoginDto';
 import { AccountServiceFactory } from '@service/AccountServiceFactory';
+import { Button, Form, Input, message } from 'antd';
 import Cookies from 'js-cookie';
 import jwt_decode from 'jwt-decode';
-import { AuthContext } from '../AuthContext';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
 
     const navigate = useNavigate();
     const [, setAuth] = useContext(AuthContext);
+    const [, setAccessLevel] = useContext(AccessLevelContext);
     const [loginDto, setLoginDto] = useState(new LoginDto());
     const accountService = AccountServiceFactory.getAccountService();
 
     const onFinish = async () => {
+
         const [data, error] = await accountService.login(loginDto);
         if (data) {
             message.success('Action completed successfully');
             Cookies.set('token', data);
-            setAuth(jwt_decode(data));
+            const decoded = jwt_decode(data) as Token;
+            decoded.groups.sort((a, b) => a.localeCompare(b));
+            setAuth(decoded);
+            setAccessLevel(decoded.groups[0] as AccessLevel);
             navigate('/', {replace: true});
         }
         if (error) {

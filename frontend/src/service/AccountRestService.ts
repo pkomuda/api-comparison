@@ -1,11 +1,14 @@
-import { AddAccountDto } from '../dto/AddAccountDto';
-import { LoginDto } from '../dto/LoginDto';
-import { AccountService } from './AccountService';
-import { RegisterDto } from '../dto/RegisterDto';
+import { AccountDetailsDto } from '@dto/AccountDetailsDto';
+import { AddAccountDto } from '@dto/AddAccountDto';
+import { LoginDto } from '@dto/LoginDto';
+import { RegisterDto } from '@dto/RegisterDto';
+import { AccountService } from '@service/AccountService';
+import Cookies from 'js-cookie';
 
 export class AccountRestService implements AccountService {
 
     private static instance: AccountRestService;
+    private baseUrl = 'http://localhost:8080/rest';
 
     private constructor() {
     }
@@ -14,41 +17,52 @@ export class AccountRestService implements AccountService {
         return this.instance ? this.instance : new AccountRestService();
     }
 
-    async login(loginDto: LoginDto): Promise<[string, string]> {
-        console.log("rest login");
-        const response = await fetch('http://localhost:8080/rest/login', {method: 'POST', body: JSON.stringify(loginDto), headers: {'Content-Type': 'application/json'}});
-        if (response.ok) {
-            return [await response.text(), null];
+    private headers(): any {
+        const token = Cookies.get('token');
+        if (token) {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         } else {
-            return [null, await response.text()];
+            return {
+                'Content-Type': 'application/json',
+            }
         }
+    }
+
+    private post(url: string, dto: any): Promise<Response> {
+        return fetch(this.baseUrl + url, {
+            method: 'POST',
+            body: JSON.stringify(dto),
+            headers: this.headers()
+        });
+    }
+
+    private get(url: string): Promise<Response> {
+        return fetch(this.baseUrl + url, {
+            method: 'GET',
+            headers: this.headers()
+        });
+    }
+
+    async login(loginDto: LoginDto): Promise<[string, string]> {
+        const response = await this.post('/login', loginDto);
+        return response.ok ? [await response.text(), null] : [null, await response.text()];
     }
 
     async register(registerDto: RegisterDto): Promise<[any, string]> {
-        const response = await fetch('http://localhost:8080/rest/register', {method: 'POST', body: JSON.stringify(registerDto), headers: {'Content-Type': 'application/json'}});
-        if (response.ok) {
-            return [await response.json(), null];
-        } else {
-            return [null, await response.text()];
-        }
+        const response = await this.post('/register', registerDto);
+        return response.ok ? [await response.json(), null] : [null, await response.text()];
     }
 
-    async addAccount(addAccountDto: AddAccountDto) {
-        // Cookies.get('token');
-        const response = await fetch('http://localhost:8080/rest/account', {method: 'POST', body: JSON.stringify(addAccountDto)});
-        const data = await response.json();
+    async addAccount(addAccountDto: AddAccountDto): Promise<[any, string]> {
+        const response = await this.post('/account', addAccountDto);
+        return response.ok ? [await response.json(), null] : [null, await response.text()];
     }
 
-    async getAccount(username: string): Promise<[LoginDto, string]> {
-        const response = await fetch(`http://localhost:8080/rest/account/${username}`, {method: 'GET', headers: {'Content-Type': 'application/json'}});
-        if (response.ok) {
-            return [await response.json() as LoginDto, null];
-        } else {
-            return [null, await response.text()];
-        }
-    }
-
-    async getAccounts(): Promise<LoginDto[]> {
-        return await (await fetch(`http://localhost:8080/rest/accounts`, {method: 'GET', headers: {'Content-Type': 'application/json'}})).json() as LoginDto[];
+    async getAccount(username: string): Promise<[AccountDetailsDto, string]> {
+        const response = await this.get(`/account/${username}`);
+        return response.ok ? [await response.json() as AccountDetailsDto, null] : [null, await response.text()];
     }
 }
