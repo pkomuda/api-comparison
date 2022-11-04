@@ -2,37 +2,28 @@ import { Carousel } from 'antd';
 
 export const Home = () => {
 
-    const size = {width: '960px', height: '540px'};
-
     return (
-        <div style={{...size, margin: '0 auto'}}>
+        <div style={{width: '960px', height: '540px', margin: '0 auto', backgroundColor: '#001529'}}>
             <Carousel autoplay>
-                <div>
+                <div className="center" style={{height: '540px'}}>
                     <img
-                        src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/blogs/18725/images/DUdzx1kQRdu32TPI69a8_Framing-.jpg"
-                        alt="mountains"
-                        style={size}
+                        src="src/image/rest.png"
+                        alt="rest"
+                        style={{maxWidth: '100%', height: 'auto', backgroundColor: '#001529'}}
                     />
                 </div>
-                <div>
+                <div className="center" style={{height: '540px'}}>
                     <img
-                        src="https://antongorlin.com/wp-content/uploads/2019/03/picture-of-desert-1280x720.jpg"
-                        alt="desert"
-                        style={size}
+                        src="src/image/graphql.png"
+                        alt="graphql"
+                        style={{maxWidth: '100%', height: 'auto', backgroundColor: '#001529'}}
                     />
                 </div>
-                <div>
+                <div className="center" style={{height: '540px'}}>
                     <img
-                        src="https://www.imperiumtapet.com/public/uploads/preview/ocean-20421533977905u7jjsd8d4f.jpg"
-                        alt="ocean"
-                        style={size}
-                    />
-                </div>
-                <div>
-                    <img
-                        src="https://wallpaperaccess.com/full/1566449.jpg"
-                        alt="jungle"
-                        style={size}
+                        src="src/image/grpc.png"
+                        alt="grpc"
+                        style={{maxWidth: '960px', height: '540px', backgroundColor: '#001529'}}
                     />
                 </div>
             </Carousel>

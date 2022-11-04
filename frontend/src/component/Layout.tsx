@@ -13,7 +13,7 @@ export const Layout = (props: { children: React.ReactElement }) => {
 
     const [auth, setAuth] = useContext(AuthContext);
     const [accessLevel, setAccessLevel] = useContext(AccessLevelContext);
-    const [, setApi] = useContext(ApiContext);
+    const [api, setApi] = useContext(ApiContext);
     const { Header, Content, Sider } = AntLayout;
 
     const handleChangeAccessLevel = (value: AccessLevel) => {
@@ -133,7 +133,7 @@ export const Layout = (props: { children: React.ReactElement }) => {
                     <img src="src/favicon.svg" alt="logo" width="48px" height="48px"/>
                     <span>API Comparison</span>
                 </Link>
-                <Menu theme="dark" mode="horizontal" items={topItems} disabledOverflow/>
+                <Menu theme="dark" mode="horizontal" items={topItems} selectedKeys={[api]} disabledOverflow/>
             </Header>
             <AntLayout>
                 <Sider width={200} className="site-layout-background">
@@ -142,6 +142,7 @@ export const Layout = (props: { children: React.ReactElement }) => {
                         defaultOpenKeys={['user']}
                         style={{height: '100%', borderRight: 0}}
                         items={getSideItems()}
+                        selectedKeys={[accessLevel]}
                     />
                 </Sider>
                 <AntLayout style={{padding: '0 24px 24px'}}>
