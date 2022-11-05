@@ -7,41 +7,57 @@ import { Layout as AntLayout, Menu } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import Cookies from 'js-cookie';
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+const { Header, Content, Sider } = AntLayout;
 
 export const Layout = (props: { children: React.ReactElement }) => {
 
+    const navigate = useNavigate();
     const [auth, setAuth] = useContext(AuthContext);
     const [accessLevel, setAccessLevel] = useContext(AccessLevelContext);
     const [api, setApi] = useContext(ApiContext);
-    const { Header, Content, Sider } = AntLayout;
 
     const handleChangeAccessLevel = (value: AccessLevel) => {
         setAccessLevel(value);
+        navigate('/', {replace: true});
     };
 
     const handleChangeApi = (value: Api) => {
         localStorage.setItem('api', value);
         setApi(value);
-        // location.replace('/');
     };
 
     const handleLogout = () => {
         Cookies.remove('token');
         setAuth({
             upn: '',
-            groups: []
+            groups: [],
+            iat: 0,
+            exp: 0
         });
+        navigate('/', {replace: true});
     };
 
     const getUserItems = (): ItemType[] => {
         if (auth.upn) {
-            return [
-                {
-                    key: 'logout',
-                    label: <span onClick={handleLogout}>Logout</span>
-                }
-            ];
+            const logout = {
+                key: 'logout',
+                label: <span onClick={handleLogout}>Logout</span>
+            };
+            if (accessLevel === 'admin') {
+                return [
+                    {
+                        key: 'addAccount',
+                        label: <Link to="/addAccount">Add account</Link>
+                    },
+                    logout
+                ];
+            } else {
+                return [
+                    logout
+                ];
+            }
         } else {
             return [
                 {
@@ -130,7 +146,7 @@ export const Layout = (props: { children: React.ReactElement }) => {
         <AntLayout style={{minHeight: '100vh'}}>
             <Header className="header">
                 <Link to="/" className="logo">
-                    <img src="src/favicon.svg" alt="logo" width="48px" height="48px"/>
+                    <img src="src/image/favicon.svg" alt="logo" width="48px" height="48px"/>
                     <span>API Comparison</span>
                 </Link>
                 <Menu theme="dark" mode="horizontal" items={topItems} selectedKeys={[api]} disabledOverflow/>

@@ -51,14 +51,14 @@ export class AccountRestService implements AccountService {
         return response.ok ? [await response.text(), null] : [null, await response.text()];
     }
 
-    async register(registerDto: RegisterDto): Promise<[any, string]> {
+    async register(registerDto: RegisterDto): Promise<[boolean, string]> {
         const response = await this.post('/register', registerDto);
-        return response.ok ? [await response.json(), null] : [null, await response.text()];
+        return response.ok ? [response.ok, null] : [null, await response.text()];
     }
 
-    async addAccount(addAccountDto: AddAccountDto): Promise<[any, string]> {
+    async addAccount(addAccountDto: AddAccountDto): Promise<[boolean, string]> {
         const response = await this.post('/account', addAccountDto);
-        return response.ok ? [await response.json(), null] : [null, await response.text()];
+        return response.ok ? [response.ok, null] : [null, await response.text()];
     }
 
     async getAccount(username: string): Promise<[AccountDetailsDto, string]> {

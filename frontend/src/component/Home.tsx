@@ -5,7 +5,7 @@ export const Home = () => {
     return (
         <div style={{width: '960px', height: '540px', margin: '0 auto', backgroundColor: '#001529'}}>
             <Carousel autoplay>
-                <div className="center" style={{height: '540px'}}>
+                <div className="carousel" style={{height: '540px'}}>
                     <img
                         src="src/image/rest.png"
                         alt="rest"

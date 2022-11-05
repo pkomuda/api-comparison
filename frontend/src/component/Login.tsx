@@ -17,12 +17,11 @@ export const Login = () => {
     const accountService = AccountServiceFactory.getAccountService();
 
     const onFinish = async () => {
-
         const [data, error] = await accountService.login(loginDto);
         if (data) {
-            message.success('Action completed successfully');
-            Cookies.set('token', data);
+            message.success('Login successful');
             const decoded = jwt_decode(data) as Token;
+            Cookies.set('token', data, {expires: (decoded.exp - decoded.iat)/86400});
             decoded.groups.sort((a, b) => a.localeCompare(b));
             setAuth(decoded);
             setAccessLevel(decoded.groups[0] as AccessLevel);
@@ -30,12 +29,7 @@ export const Login = () => {
         }
         if (error) {
             message.error(error);
-            // Modal.error({content: error});
         }
-    };
-
-    const onFinishFailed = () => {
-        console.log('failed');
     };
 
     return (
@@ -45,7 +39,6 @@ export const Login = () => {
             wrapperCol={{ span: 16 }}
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
             <Form.Item

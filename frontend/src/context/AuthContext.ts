@@ -5,6 +5,8 @@ import React, { Dispatch, SetStateAction } from 'react';
 export interface Token {
     upn: string;
     groups: string[];
+    iat: number;
+    exp: number;
 }
 
 export const getTokenFromCookie = (): Token => {
@@ -13,12 +15,16 @@ export const getTokenFromCookie = (): Token => {
         const decoded = jwt_decode(token) as Token;
         return {
             upn: decoded.upn,
-            groups: decoded.groups
+            groups: decoded.groups,
+            iat: decoded.iat,
+            exp: decoded.exp
         };
     } else {
         return {
             upn: '',
-            groups: []
+            groups: [],
+            iat: 0,
+            exp: 0
         };
     }
 }

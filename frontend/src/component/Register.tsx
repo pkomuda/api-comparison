@@ -21,10 +21,6 @@ export const Register = () => {
         }
     };
 
-    const onFinishFailed = () => {
-        console.log('failed');
-    };
-
     return (
         <Form
             name="basic"
@@ -32,7 +28,6 @@ export const Register = () => {
             wrapperCol={{ span: 16 }}
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
             <Form.Item

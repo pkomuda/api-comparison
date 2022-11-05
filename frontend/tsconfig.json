@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "experimentalDecorators": true,
         "strictPropertyInitialization": false,
         "strictNullChecks": false,
         "target": "ESNext",

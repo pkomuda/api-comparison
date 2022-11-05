@@ -1,103 +1,169 @@
 import { AddAccountDto } from '@dto/AddAccountDto';
 import { AccountServiceFactory } from '@service/AccountServiceFactory';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input, message, Modal, PageHeader, Select, SelectProps, Switch } from 'antd';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const AddAccount = () => {
 
     const navigate = useNavigate();
-    const [addAccountDto, setAddAccountDto] = useState(new AddAccountDto());
-    const accountService = AccountServiceFactory.getAccountService();
+    const [addAccountDto, setAddAccountDto] = useState(() => {
+        const dto = new AddAccountDto();
+        dto.active = true;
+        dto.accessLevels = ['client'];
+        return dto;
+    });
+    const accountService = AccountServiceFactory.getAccountService()
 
     const onFinish = async () => {
         const [data, error] = await accountService.addAccount(addAccountDto);
         if (data) {
-            message.success('Action completed successfully');
+            message.success('Account added successfully');
             navigate('/', {replace: true});
         }
         if (error) {
             message.error(error);
+            // Modal.error({content: error});
         }
     };
 
-    const onFinishFailed = () => {
-        console.log('failed');
-    };
+    const accessLevels: SelectProps['options'] = [
+        {
+            label: 'Admin',
+            value: 'admin'
+        },
+        {
+            label: 'Client',
+            value: 'client'
+        }
+    ];
 
     return (
-        <Form
-            name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            autoComplete="off"
-        >
-            <Form.Item
-                label="Username"
-                name="username"
-                rules={[{ required: true, message: 'Please input your username!' }]}
+        <React.Fragment>
+            <PageHeader
+                className="site-page-header"
+                title="Add account"
+            />
+            <Form
+                name="addAccount"
+                autoComplete="off"
+                onFinish={onFinish}
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 10 }}
+                colon={false}
+                requiredMark={false}
+                validateMessages={{
+                    required: '${label} is required',
+                    whitespace: '${label} cannot be empty',
+                    string: {
+                        min: '${label} must be at least ${min} characters',
+                        max: '${label} cannot be longer than ${max} characters'
+                    },
+                    types: {
+                        email: '${label} is not a valid email'
+                    }
+                }}
             >
-                <Input type='text' value={addAccountDto.username}
-                       onChange={event => setAddAccountDto({...addAccountDto, username: event.target.value})}
-                />
-            </Form.Item>
+                <Form.Item
+                    label="Username"
+                    name="username"
+                    rules={[{required: true}, {whitespace: true}, {max: 32}]}
+                >
+                    <Input autoFocus
+                           value={addAccountDto.username}
+                           onChange={event => setAddAccountDto({...addAccountDto, username: event.target.value})}
+                    />
+                </Form.Item>
 
-            <Form.Item
-                label="Password"
-                name="password"
-                rules={[{ required: true, message: 'Please input your password!' }]}
-            >
-                <Input.Password type='text' value={addAccountDto.password}
-                                onChange={event => setAddAccountDto({...addAccountDto, password: event.target.value})}/>
-            </Form.Item>
+                <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[{required: true}, {whitespace: true}, {min: 8}, {max: 32}]}
+                >
+                    <Input.Password value={addAccountDto.password}
+                                    onChange={event => setAddAccountDto({...addAccountDto, password: event.target.value})}
+                    />
+                </Form.Item>
 
-            <Form.Item
-                label="Confirm password"
-                name="confirmPassword"
-                rules={[{ required: true, message: 'Please input your password confirmation!' }]}
-            >
-                <Input.Password type='text' value={addAccountDto.confirmPassword}
-                                onChange={event => setAddAccountDto({...addAccountDto, confirmPassword: event.target.value})}/>
-            </Form.Item>
+                <Form.Item
+                    label="Password confirmation"
+                    name="confirmPassword"
+                    rules={[
+                        {required: true}, {whitespace: true}, {min: 8}, {max: 32},
+                        ({getFieldValue}) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue('password') === value) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(new Error('Passwords must be matching'));
+                            }
+                        })
+                    ]}
+                >
+                    <Input.Password value={addAccountDto.confirmPassword}
+                                    onChange={event => setAddAccountDto({...addAccountDto, confirmPassword: event.target.value})}
+                    />
+                </Form.Item>
 
-            <Form.Item
-                label="Email"
-                name="email"
-                rules={[{ required: true, message: 'Please input your email!' }]}
-            >
-                <Input type='text' value={addAccountDto.email}
-                       onChange={event => setAddAccountDto({...addAccountDto, email: event.target.value})}
-                />
-            </Form.Item>
+                <Form.Item
+                    label="Email"
+                    name="email"
+                    rules={[{required: true}, {whitespace: true}, {max: 32}, {type: 'email'}]}
+                >
+                    <Input value={addAccountDto.email}
+                           onChange={event => setAddAccountDto({...addAccountDto, email: event.target.value})}
+                    />
+                </Form.Item>
 
-            <Form.Item
-                label="First name"
-                name="firstName"
-                rules={[{ required: true, message: 'Please input your first name!' }]}
-            >
-                <Input type='text' value={addAccountDto.firstName}
-                       onChange={event => setAddAccountDto({...addAccountDto, firstName: event.target.value})}
-                />
-            </Form.Item>
+                <Form.Item
+                    label="First name"
+                    name="firstName"
+                    rules={[{required: true}, {whitespace: true}, {max: 32}]}
+                >
+                    <Input value={addAccountDto.firstName}
+                           onChange={event => setAddAccountDto({...addAccountDto, firstName: event.target.value})}
+                    />
+                </Form.Item>
 
-            <Form.Item
-                label="Last name"
-                name="lastName"
-                rules={[{ required: true, message: 'Please input your last name!' }]}
-            >
-                <Input type='text' value={addAccountDto.lastName}
-                       onChange={event => setAddAccountDto({...addAccountDto, lastName: event.target.value})}
-                />
-            </Form.Item>
+                <Form.Item
+                    label="Last name"
+                    name="lastName"
+                    rules={[{required: true}, {whitespace: true}, {max: 32}]}
+                >
+                    <Input value={addAccountDto.lastName}
+                           onChange={event => setAddAccountDto({...addAccountDto, lastName: event.target.value})}/>
+                </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
-            </Form.Item>
-        </Form>
+                <Form.Item
+                    label="Access levels"
+                    name="accessLevels"
+                    initialValue={addAccountDto.accessLevels}
+                    rules={[{required: true, message: 'At least one access level is required'}]}
+                >
+                    <Select
+                        showArrow
+                        mode="multiple"
+                        options={accessLevels}
+                        value={addAccountDto.accessLevels}
+                        onChange={value => setAddAccountDto({...addAccountDto, accessLevels: value})}
+                    />
+                </Form.Item>
+
+                <Form.Item
+                    label="Active"
+                    name="active"
+                    initialValue={addAccountDto.active}
+                    rules={[{required: true}]}
+                >
+                    <Switch checked={addAccountDto.active}
+                            onChange={value => setAddAccountDto({...addAccountDto, active: value})}
+                    />
+                </Form.Item>
+
+                <Form.Item wrapperCol={{ offset: 8, span: 10 }}>
+                    <Button type="primary" htmlType="submit">Submit</Button>
+                </Form.Item>
+            </Form>
+        </React.Fragment>
     );
 };
