@@ -31,6 +31,6 @@ public class AccountRepository implements PanacheRepository<Account> {
                 + " or lower(email) like concat('%', lower(?1), '%')"
                 + " or lower(firstName) like concat('%', lower(?1), '%')"
                 + " or lower(lastName) like concat('%', lower(?1), '%')", sorting, query).page(page, size);
-        return new Page<>(panacheQuery.list(), panacheQuery.pageCount());
+        return new Page<>(panacheQuery.list(), panacheQuery.count());
     }
 }

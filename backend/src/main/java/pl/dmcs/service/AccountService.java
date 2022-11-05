@@ -26,7 +26,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
-import static pl.dmcs.entity.AccessLevel.ACCESS_LEVEL_USER;
+import static pl.dmcs.entity.AccessLevel.ACCESS_LEVEL_CLIENT;
 import static pl.dmcs.exception.ApplicationException.*;
 
 @ApplicationScoped
@@ -67,7 +67,7 @@ public class AccountService {
         account.setActive(true);
         account.setConfirmed(false);
         account.setConfirmationToken(UUID.randomUUID().toString());
-        account.addAccessLevels(Set.of(ACCESS_LEVEL_USER));
+        account.addAccessLevels(Set.of(ACCESS_LEVEL_CLIENT));
         addAccount(account);
         mailer.send(Mail.withHtml(registerDto.getEmail(), "Confirm your account", """
                 Click <a href="%s/confirm/%s">here</a> to confirm your account

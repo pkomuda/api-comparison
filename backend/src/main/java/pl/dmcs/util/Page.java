@@ -11,11 +11,11 @@ import java.util.function.Function;
 public class Page<T> {
 
     private List<T> content;
-    private int pageCount;
+    private long totalSize;
 
     public <U> Page<U> map(Function<T, U> mapper) {
         return new Page<>(content.stream()
                 .map(mapper)
-                .toList(), pageCount);
+                .toList(), totalSize);
     }
 }

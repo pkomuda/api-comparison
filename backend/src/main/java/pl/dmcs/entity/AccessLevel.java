@@ -19,8 +19,8 @@ import java.util.List;
 public class AccessLevel extends PanacheEntity {
 
     public static final String ACCESS_LEVEL_ADMIN = "admin";
-    public static final String ACCESS_LEVEL_USER = "user";
-    public static final List<String> ACCESS_LEVEL_NAMES = List.of(ACCESS_LEVEL_ADMIN, ACCESS_LEVEL_USER);
+    public static final String ACCESS_LEVEL_CLIENT = "client";
+    public static final List<String> ACCESS_LEVEL_NAMES = List.of(ACCESS_LEVEL_ADMIN, ACCESS_LEVEL_CLIENT);
 
     @NotBlank
     private String name;
