@@ -4,7 +4,7 @@ import { Api, ApiContext } from '@context/ApiContext';
 import { AuthContext } from '@context/AuthContext';
 import type { MenuProps } from 'antd';
 import { Layout as AntLayout, Menu } from 'antd';
-import { ItemType } from 'antd/lib/menu/hooks/useItems';
+import { ItemType } from 'antd/es/menu/hooks/useItems';
 import Cookies from 'js-cookie';
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -50,6 +50,10 @@ export const Layout = (props: { children: React.ReactElement }) => {
                     {
                         key: 'addAccount',
                         label: <Link to="/addAccount">Add account</Link>
+                    },
+                    {
+                        key: 'listAccounts',
+                        label: <Link to="/accounts">List accounts</Link>
                     },
                     logout
                 ];

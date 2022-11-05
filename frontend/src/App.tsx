@@ -1,6 +1,7 @@
 import { AddAccount } from '@component/AddAccount';
 import { Home } from '@component/Home';
 import { Layout } from '@component/Layout';
+import { ListAccounts } from '@component/ListAccounts';
 import { Login } from '@component/Login';
 import { Register } from '@component/Register';
 import { AccessLevel, AccessLevelContext, getAccessLevelFromToken } from '@context/AccessLevelContext';
@@ -26,6 +27,7 @@ export const App = () => {
                                 <Route path="/login" element={<Login/>}/>
                                 <Route path="/register" element={<Register/>}/>
                                 <Route path="/addAccount" element={<AddAccount/>}/>
+                                <Route path="/accounts" element={<ListAccounts/>}/>
                             </Routes>
                         </Layout>
                     </BrowserRouter>

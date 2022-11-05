@@ -1,4 +1,5 @@
 import { AccountDetailsDto } from '@dto/AccountDetailsDto';
+import { AccountPagesDto } from '@dto/AccountPagesDto';
 import { AddAccountDto } from '@dto/AddAccountDto';
 import { LoginDto } from '@dto/LoginDto';
 import { RegisterDto } from '@dto/RegisterDto';
@@ -64,5 +65,10 @@ export class AccountRestService implements AccountService {
     async getAccount(username: string): Promise<[AccountDetailsDto, string]> {
         const response = await this.get(`/account/${username}`);
         return response.ok ? [await response.json() as AccountDetailsDto, null] : [null, await response.text()];
+    }
+
+    async getAccounts(query: string, sort: string, dir: string, page: number, size: number): Promise<[AccountPagesDto, string]> {
+        const response = await this.get(`/accounts?query=${query}&sort=${sort}&dir=${dir}&page=${page}&size=${size}`);
+        return response.ok ? [await response.json() as AccountPagesDto, null] : [null, await response.text()];
     }
 }

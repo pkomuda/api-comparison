@@ -12,14 +12,14 @@ export const Home = () => {
                         style={{maxWidth: '100%', height: 'auto', backgroundColor: '#001529'}}
                     />
                 </div>
-                <div className="center" style={{height: '540px'}}>
+                <div className="carousel" style={{height: '540px'}}>
                     <img
                         src="src/image/graphql.png"
                         alt="graphql"
                         style={{maxWidth: '100%', height: 'auto', backgroundColor: '#001529'}}
                     />
                 </div>
-                <div className="center" style={{height: '540px'}}>
+                <div className="carousel" style={{height: '540px'}}>
                     <img
                         src="src/image/grpc.png"
                         alt="grpc"
