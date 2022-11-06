@@ -2,7 +2,7 @@ import { MoreOutlined, SearchOutlined } from '@ant-design/icons';
 import { AccountDetailsDto } from '@dto/AccountDetailsDto';
 import { AccountPagesDto } from '@dto/AccountPagesDto';
 import { AccountServiceFactory } from '@service/AccountServiceFactory';
-import { Button, Checkbox, Input, PageHeader, Popover, Table, TablePaginationConfig } from 'antd';
+import { Button, Checkbox, Input, message, PageHeader, Popover, Table, TablePaginationConfig } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { FilterValue, SorterResult, SortOrder } from 'antd/es/table/interface';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -17,7 +17,7 @@ export const ListAccounts = () => {
     const [sort, setSort] = useState<string>(searchParams.get('sort') || '');
     const [dir, setDir] = useState<string>(searchParams.get('dir') || 'asc');
     const [page, setPage] = useState<number>(parseInt(searchParams.get('page')) || 1);
-    const [size, setSize] = useState<number>(parseInt(searchParams.get('size')) || 3);
+    const [size, setSize] = useState<number>(parseInt(searchParams.get('size')) || 10);
     const accountService = AccountServiceFactory.getAccountService()
 
     const getAccounts = useCallback(async () => {
@@ -36,8 +36,10 @@ export const ListAccounts = () => {
 
     const handleChangeQuery = (value: string) => {
         setQuery(value);
+        setPage(1);
         const params = searchParams;
         params.set('query', value);
+        params.set('page', '1');
         setSearchParams(params);
     };
 
@@ -111,19 +113,29 @@ export const ListAccounts = () => {
             render: confirmed => <Checkbox checked={confirmed}/>
         },
         {
-            render: () => (
+            render: (_, row) => (
                 <Popover
                     trigger="click"
                     placement="bottom"
                     content={
                         <div>
-                            <Button type="link" onClick={() => {}}>Edit</Button>
+                            <Button type="link" onClick={() => {
+                                navigate(`/editAccount/${row.username}`, {replace: true})
+                            }}>
+                                Edit
+                            </Button>
                             <br/>
-                            <Button type="link" onClick={() => {}}>Delete</Button>
+                            <Button type="link" onClick={async () => {
+                                await accountService.deleteAccount(row.username);
+                                await getAccounts();
+                                message.success('Account deleted successfully');
+                            }}>
+                                Delete
+                            </Button>
                         </div>
                     }
                 >
-                    <Button shape="circle" icon={<MoreOutlined/>}/>
+                    <Button shape="circle" size="small" icon={<MoreOutlined/>}/>
                 </Popover>
             )
         }
@@ -149,8 +161,7 @@ export const ListAccounts = () => {
                     pageSize: size,
                     total: accountPagesDto.totalSize,
                     showSizeChanger: true,
-                    showQuickJumper: true,
-                    pageSizeOptions: [3, 6, 9, 12]
+                    showQuickJumper: true
                 }}
             />
         </React.Fragment>

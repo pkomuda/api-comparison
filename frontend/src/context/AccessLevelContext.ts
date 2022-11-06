@@ -7,6 +7,7 @@ export type AccessLevel = typeof accessLevelNames[number];
 export const getAccessLevelFromToken = (auth: [Token, Dispatch<SetStateAction<Token>>]): AccessLevel => {
     const [token, ] = auth;
     if (token.upn) {
+        token.groups.sort((a, b) => a.localeCompare(b));
         return token.groups[0] as AccessLevel;
     } else {
         return '';

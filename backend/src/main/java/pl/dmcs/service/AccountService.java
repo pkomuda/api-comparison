@@ -140,6 +140,12 @@ public class AccountService {
         account.setPassword(BcryptUtil.bcryptHash(changePasswordDto.getPassword()));
     }
 
+    public void deleteAccount(String username) {
+        Account account = findAccount(username);
+        account.deleteAllAccessLevels();
+        accountRepository.deleteByUsername(username);
+    }
+
     private void addAccount(Account account) {
         try {
             accountRepository.persistAndFlush(account);

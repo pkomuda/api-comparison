@@ -33,4 +33,8 @@ public class AccountRepository implements PanacheRepository<Account> {
                 + " or lower(lastName) like concat('%', lower(?1), '%')", sorting, query).page(page, size);
         return new Page<>(panacheQuery.list(), panacheQuery.count());
     }
+
+    public void deleteByUsername(String username) {
+        delete("username", username);
+    }
 }

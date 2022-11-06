@@ -99,4 +99,11 @@ public class AccountEndpoint {
     public void changePassword(ChangePasswordDto changePasswordDto) {
         accountService.changePassword(changePasswordDto);
     }
+
+    @DELETE
+    @Path("/account/{username}")
+    @RolesAllowed("admin")
+    public void deleteAccount(@PathParam("username") String username) {
+        accountService.deleteAccount(username);
+    }
 }

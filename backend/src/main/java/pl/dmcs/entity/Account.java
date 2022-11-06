@@ -46,7 +46,7 @@ public class Account extends PanacheEntity {
     private Long version;
 
     @Builder.Default
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "account")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "account")
     private Set<AccessLevel> accessLevels = new HashSet<>();
 
     public void addAccessLevels(Set<String> names) {
@@ -66,5 +66,10 @@ public class Account extends PanacheEntity {
                         .account(this)
                         .build())
                 .forEach(accessLevel -> accessLevels.add(accessLevel));
+    }
+
+    public void deleteAllAccessLevels() {
+        accessLevels.forEach(accessLevel -> accessLevel.setAccount(null));
+        accessLevels.clear();
     }
 }

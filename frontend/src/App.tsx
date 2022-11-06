@@ -1,4 +1,5 @@
 import { AddAccount } from '@component/AddAccount';
+import { EditAccount } from '@component/EditAccount';
 import { Home } from '@component/Home';
 import { Layout } from '@component/Layout';
 import { ListAccounts } from '@component/ListAccounts';
@@ -27,6 +28,7 @@ export const App = () => {
                                 <Route path="/login" element={<Login/>}/>
                                 <Route path="/register" element={<Register/>}/>
                                 <Route path="/addAccount" element={<AddAccount/>}/>
+                                <Route path="/editAccount/:username" element={<EditAccount/>}/>
                                 <Route path="/accounts" element={<ListAccounts/>}/>
                             </Routes>
                         </Layout>
