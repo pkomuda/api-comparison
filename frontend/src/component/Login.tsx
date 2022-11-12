@@ -2,7 +2,7 @@ import { AccessLevel, AccessLevelContext } from '@context/AccessLevelContext';
 import { AuthContext, Token } from '@context/AuthContext';
 import { LoginDto } from '@dto/LoginDto';
 import { AccountServiceFactory } from '@service/AccountServiceFactory';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input, message, PageHeader } from 'antd';
 import Cookies from 'js-cookie';
 import jwt_decode from 'jwt-decode';
 import React, { useContext, useState } from 'react';
@@ -33,38 +33,49 @@ export const Login = () => {
     };
 
     return (
-        <Form
-            name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            autoComplete="off"
-        >
-            <Form.Item
-                label="Username"
-                name="username"
-                rules={[{ required: true, message: 'Please input your username!' }]}
+        <React.Fragment>
+            <PageHeader
+                className="site-page-header"
+                title="Login"
+            />
+            <Form
+                name="login"
+                autoComplete="off"
+                onFinish={onFinish}
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 10 }}
+                colon={false}
+                requiredMark={false}
+                validateMessages={{
+                    required: '${label} is required',
+                    whitespace: '${label} cannot be empty'
+                }}
             >
-                <Input type='text' value={loginDto.username}
-                       onChange={event => setLoginDto({...loginDto, username: event.target.value})}
-                />
-            </Form.Item>
+                <Form.Item
+                    label="Username"
+                    name="username"
+                    rules={[{required: true}, {whitespace: true}]}
+                >
+                    <Input autoFocus
+                           value={loginDto.username}
+                           onChange={event => setLoginDto({...loginDto, username: event.target.value})}
+                    />
+                </Form.Item>
 
-            <Form.Item
-                label="Password"
-                name="password"
-                rules={[{ required: true, message: 'Please input your password!' }]}
-            >
-                <Input.Password type='text' value={loginDto.password}
-                                onChange={event => setLoginDto({...loginDto, password: event.target.value})}/>
-            </Form.Item>
+                <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[{required: true}, {whitespace: true}]}
+                >
+                    <Input.Password value={loginDto.password}
+                                    onChange={event => setLoginDto({...loginDto, password: event.target.value})}
+                    />
+                </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
-            </Form.Item>
-        </Form>
+                <Form.Item wrapperCol={{ offset: 8, span: 10 }}>
+                    <Button type="primary" htmlType="submit">Submit</Button>
+                </Form.Item>
+            </Form>
+        </React.Fragment>
     );
 };

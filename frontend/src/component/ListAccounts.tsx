@@ -46,7 +46,7 @@ export const ListAccounts = () => {
     const handleChangeTable = (pagination: TablePaginationConfig,
                                filters: Record<string, FilterValue>,
                                sorter: SorterResult<AccountDetailsDto> | SorterResult<AccountDetailsDto>[]) => {
-        const sortValue = (sorter as SorterResult<AccountDetailsDto>).field?.toString() || '';
+        const sortValue = (sorter as SorterResult<AccountDetailsDto>).column?.key.toString() || '';
         const dirValue = (sorter as SorterResult<AccountDetailsDto>).order?.slice(0, -3) || '';
         setSort(sortValue);
         setDir(dirValue);

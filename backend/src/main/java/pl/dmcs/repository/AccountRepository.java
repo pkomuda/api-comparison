@@ -26,7 +26,7 @@ public class AccountRepository implements PanacheRepository<Account> {
 
     public Page<Account> find(String query, String sort, String dir, int page, int size) {
         Sort.Direction direction = dir.equals("desc") ? Sort.Direction.Descending : Sort.Direction.Ascending;
-        Sort sorting = sort.isEmpty() ? Sort.empty() : Sort.by(sort, direction);
+        Sort sorting = sort.isEmpty() || dir.isEmpty() ? Sort.by("id", Sort.Direction.Ascending) : Sort.by(sort, direction);
         PanacheQuery<Account> panacheQuery = find("lower(username) like concat('%', lower(?1), '%')"
                 + " or lower(email) like concat('%', lower(?1), '%')"
                 + " or lower(firstName) like concat('%', lower(?1), '%')"

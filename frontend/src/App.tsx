@@ -1,3 +1,4 @@
+import { AccountDetails } from "@component/AccountDetails";
 import { AddAccount } from '@component/AddAccount';
 import { EditAccount } from '@component/EditAccount';
 import { Home } from '@component/Home';
@@ -30,6 +31,7 @@ export const App = () => {
                                 <Route path="/addAccount" element={<AddAccount/>}/>
                                 <Route path="/editAccount/:username" element={<EditAccount/>}/>
                                 <Route path="/accounts" element={<ListAccounts/>}/>
+                                <Route path="/account" element={<AccountDetails/>}/>
                             </Routes>
                         </Layout>
                     </BrowserRouter>

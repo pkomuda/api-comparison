@@ -41,12 +41,17 @@ export const Layout = (props: { children: React.ReactElement }) => {
 
     const getUserItems = (): ItemType[] => {
         if (auth.upn) {
+            const accountDetails = {
+                key: 'accountDetails',
+                label: <Link to="/account">Account details</Link>
+            };
             const logout = {
                 key: 'logout',
                 label: <span onClick={handleLogout}>Logout</span>
             };
             if (accessLevel === 'admin') {
                 return [
+                    accountDetails,
                     {
                         key: 'addAccount',
                         label: <Link to="/addAccount">Add account</Link>
@@ -59,6 +64,7 @@ export const Layout = (props: { children: React.ReactElement }) => {
                 ];
             } else {
                 return [
+                    accountDetails,
                     logout
                 ];
             }
@@ -166,9 +172,6 @@ export const Layout = (props: { children: React.ReactElement }) => {
                     />
                 </Sider>
                 <AntLayout style={{padding: '0 24px 24px'}}>
-                    {/*<Breadcrumb style={{margin: '16px 0'}}>*/}
-                    {/*    <Breadcrumb.Item>Home</Breadcrumb.Item>*/}
-                    {/*</Breadcrumb>*/}
                     <Content
                         className="site-layout-background"
                         style={{
