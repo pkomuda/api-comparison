@@ -3,11 +3,9 @@ import { AccountServiceFactory } from '@service/AccountServiceFactory';
 import { Button, Form, Input, message, PageHeader } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export const AccountDetails = () => {
 
-    const navigate = useNavigate();
     const [form] = useForm();
     const [accountDetailsDto, setAccountDetailsDto] = useState<AccountDetailsDto>(new AccountDetailsDto());
     const accountService = AccountServiceFactory.getAccountService()

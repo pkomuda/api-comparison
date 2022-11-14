@@ -45,6 +45,10 @@ export const Layout = (props: { children: React.ReactElement }) => {
                 key: 'accountDetails',
                 label: <Link to="/account">Account details</Link>
             };
+            const changePassword = {
+                key: 'changePassword',
+                label: <Link to="/changePassword">Change password</Link>
+            };
             const logout = {
                 key: 'logout',
                 label: <span onClick={handleLogout}>Logout</span>
@@ -52,6 +56,7 @@ export const Layout = (props: { children: React.ReactElement }) => {
             if (accessLevel === 'admin') {
                 return [
                     accountDetails,
+                    changePassword,
                     {
                         key: 'addAccount',
                         label: <Link to="/addAccount">Add account</Link>
@@ -65,6 +70,7 @@ export const Layout = (props: { children: React.ReactElement }) => {
             } else {
                 return [
                     accountDetails,
+                    changePassword,
                     logout
                 ];
             }

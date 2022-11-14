@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -20,7 +20,7 @@ public class AccessLevel extends PanacheEntity {
 
     public static final String ACCESS_LEVEL_ADMIN = "admin";
     public static final String ACCESS_LEVEL_CLIENT = "client";
-    public static final List<String> ACCESS_LEVEL_NAMES = List.of(ACCESS_LEVEL_ADMIN, ACCESS_LEVEL_CLIENT);
+    public static final Set<String> ACCESS_LEVEL_NAMES = Set.of(ACCESS_LEVEL_ADMIN, ACCESS_LEVEL_CLIENT);
 
     @NotBlank
     private String name;

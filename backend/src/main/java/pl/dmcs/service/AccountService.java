@@ -137,12 +137,15 @@ public class AccountService {
             throw new ApplicationException(PASSWORDS_NOT_MATCHING);
         }
         Account account = findAccount(changePasswordDto.getUsername());
+        if (!BcryptUtil.matches(changePasswordDto.getPreviousPassword(), account.getPassword())) {
+            throw new ApplicationException(PASSWORDS_NOT_MATCHING);
+        }
         account.setPassword(BcryptUtil.bcryptHash(changePasswordDto.getPassword()));
     }
 
     public void deleteAccount(String username) {
         Account account = findAccount(username);
-        account.deleteAllAccessLevels();
+        account.deleteAccessLevels(AccessLevel.ACCESS_LEVEL_NAMES);
         accountRepository.deleteByUsername(username);
     }
 

@@ -50,26 +50,17 @@ public class Account extends PanacheEntity {
     private Set<AccessLevel> accessLevels = new HashSet<>();
 
     public void addAccessLevels(Set<String> names) {
-        AccessLevel.ACCESS_LEVEL_NAMES.stream()
-                .filter(names::contains)
-                .map(name -> AccessLevel.builder()
-                        .name(name)
-                        .active(true)
-                        .account(this)
-                        .build())
-                .forEach(accessLevel -> accessLevels.add(accessLevel));
-        AccessLevel.ACCESS_LEVEL_NAMES.stream()
-                .filter(name -> !names.contains(name))
-                .map(name -> AccessLevel.builder()
-                        .name(name)
-                        .active(false)
-                        .account(this)
-                        .build())
-                .forEach(accessLevel -> accessLevels.add(accessLevel));
+        AccessLevel.ACCESS_LEVEL_NAMES.forEach(name -> accessLevels.add(AccessLevel.builder()
+                .name(name)
+                .active(names.contains(name))
+                .account(this)
+                .build()));
     }
 
-    public void deleteAllAccessLevels() {
-        accessLevels.forEach(accessLevel -> accessLevel.setAccount(null));
-        accessLevels.clear();
+    public void deleteAccessLevels(Set<String> names) {
+        accessLevels.stream()
+                .filter(accessLevel -> names.contains(accessLevel.getName()))
+                .forEach(accessLevel -> accessLevel.setAccount(null));
+        accessLevels.removeIf(accessLevel -> names.contains(accessLevel.getName()));
     }
 }

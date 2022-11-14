@@ -56,7 +56,7 @@ public class AccountEndpoint {
 
     @GET
     @Path("/account")
-    @RolesAllowed({"admin", "user"})
+    @RolesAllowed({"admin", "client"})
     public AccountDetailsDto getAccount(@Context SecurityContext context) {
         return accountService.getAccount(context.getUserPrincipal().getName());
     }
@@ -88,14 +88,14 @@ public class AccountEndpoint {
 
     @PUT
     @Path("/account")
-    @RolesAllowed({"admin", "user"})
+    @RolesAllowed({"admin", "client"})
     public void editAccount(@Context SecurityContext context, AccountDetailsDto accountDetailsDto) {
         accountService.editAccount(context, accountDetailsDto);
     }
 
     @PUT
     @Path("/changePassword")
-    @RolesAllowed({"admin", "user"})
+    @RolesAllowed({"admin", "client"})
     public void changePassword(ChangePasswordDto changePasswordDto) {
         accountService.changePassword(changePasswordDto);
     }

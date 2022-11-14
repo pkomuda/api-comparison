@@ -1,6 +1,7 @@
 import { AccountDetailsDto } from '@dto/AccountDetailsDto';
 import { AccountPagesDto } from '@dto/AccountPagesDto';
 import { AddAccountDto } from '@dto/AddAccountDto';
+import { ChangePasswordDto } from "@dto/ChangePasswordDto";
 import { LoginDto } from '@dto/LoginDto';
 import { RegisterDto } from '@dto/RegisterDto';
 import { AccountService } from '@service/AccountService';
@@ -94,6 +95,16 @@ export class AccountRestService implements AccountService {
 
     async deleteAccount(username: string): Promise<[boolean, string]> {
         const response = await this.delete(`/account/${username}`);
+        return response.ok ? [response.ok, null] : [null, await response.text()];
+    }
+
+    async changePassword(changePasswordDto: ChangePasswordDto): Promise<[boolean, string]> {
+        const response = await this.put('/changePassword', changePasswordDto);
+        return response.ok ? [response.ok, null] : [null, await response.text()];
+    }
+
+    async confirmAccount(token: string): Promise<[boolean, string]> {
+        const response = await this.put(`/confirm/${token}`, null);
         return response.ok ? [response.ok, null] : [null, await response.text()];
     }
 }

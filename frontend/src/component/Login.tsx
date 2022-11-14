@@ -13,7 +13,7 @@ export const Login = () => {
     const navigate = useNavigate();
     const [, setAuth] = useContext(AuthContext);
     const [, setAccessLevel] = useContext(AccessLevelContext);
-    const [loginDto, setLoginDto] = useState(new LoginDto());
+    const [loginDto, setLoginDto] = useState<LoginDto>(new LoginDto());
     const accountService = AccountServiceFactory.getAccountService();
 
     const onFinish = async () => {

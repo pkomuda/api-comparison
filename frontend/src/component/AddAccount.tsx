@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 export const AddAccount = () => {
 
     const navigate = useNavigate();
-    const [addAccountDto, setAddAccountDto] = useState(() => {
+    const [addAccountDto, setAddAccountDto] = useState<AddAccountDto>(() => {
         const dto = new AddAccountDto();
         dto.active = true;
         dto.accessLevels = ['client'];
