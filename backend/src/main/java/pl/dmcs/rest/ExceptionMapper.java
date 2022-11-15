@@ -13,10 +13,10 @@ import static pl.dmcs.exception.ApplicationException.DEFAULT_ERROR;
 public class ExceptionMapper {
 
     @ServerExceptionMapper
-    public RestResponse<String> mapException(Throwable t) {
-        log.error("Handled exception", t);
-        if (t instanceof ApplicationException) {
-            return RestResponse.status(BAD_REQUEST, t.getMessage());
+    public RestResponse<String> mapException(Exception e) {
+        log.error("Handled exception", e);
+        if (e instanceof ApplicationException) {
+            return RestResponse.status(BAD_REQUEST, e.getMessage());
         } else {
             return RestResponse.status(INTERNAL_SERVER_ERROR, DEFAULT_ERROR);
         }
