@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option java_multiple_files = true;
+option java_package = "pl.dmcs.grpc";
+option java_outer_classname = "AccountGrpcProto";
+
+package account;
+
+service Account {
+    rpc AddAccount (AddAccountRequest) returns (google.protobuf.Empty);
+    rpc GetAccount (google.protobuf.StringValue) returns (AccountDetails);
+    rpc GetAllAccounts (google.protobuf.Empty) returns (AccountList);
+    rpc GetAccounts (GetAccountsRequest) returns (AccountPages);
+}
+
+message AddAccountRequest {
+    string username = 1;
+    string password = 2;
+    string confirmPassword = 3;
+    string email = 4;
+    string firstName = 5;
+    string lastName = 6;
+    bool active = 7;
+    repeated string accessLevels = 8;
+}
+
+message AccountDetails {
+    string username = 1;
+    string email = 2;
+    string firstName = 3;
+    string lastName = 4;
+    bool active = 5;
+    bool confirmed = 6;
+    repeated string accessLevels = 7;
+}
+
+message AccountList {
+    repeated AccountDetails accounts = 1;
+}
+
+message GetAccountsRequest {
+    string query = 1;
+    string sort = 2;
+    string dir = 3;
+    uint32 page = 4;
+    uint32 size = 5;
+}
+
+message AccountPages {
+    repeated AccountDetails accounts = 1;
+    uint64 totalSize = 2;
+}
