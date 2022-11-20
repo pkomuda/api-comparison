@@ -1,5 +1,5 @@
 import { AccountRestService } from '@service/AccountRestService';
-// import { AccountGrpcService } from './AccountGrpcService';
+import { AccountGrpcService } from '@service/AccountGrpcService';
 import { AccountService } from '@service/AccountService';
 
 export class AccountServiceFactory {
@@ -8,8 +8,8 @@ export class AccountServiceFactory {
         switch (localStorage.getItem('api')) {
             case 'rest':
                 return AccountRestService.getInstance();
-            // case 'grpc':
-            //     return AccountGrpcService.getInstance();
+            case 'grpc':
+                return AccountGrpcService.getInstance();
             default:
                 return AccountRestService.getInstance();
         }

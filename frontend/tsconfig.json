@@ -22,6 +22,7 @@
             "@component/*": ["component/*"],
             "@context/*": ["context/*"],
             "@dto/*": ["dto/*"],
+            "@grpc/*": ["grpc/*"],
             "@service/*": ["service/*"]
         }
     },

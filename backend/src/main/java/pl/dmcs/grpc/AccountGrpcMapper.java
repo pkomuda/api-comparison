@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import lombok.experimental.UtilityClass;
 import pl.dmcs.dto.AccountDetailsDto;
 import pl.dmcs.dto.AddAccountDto;
+import pl.dmcs.dto.LoginDto;
 import pl.dmcs.util.Page;
 
 import java.util.List;
@@ -11,6 +12,13 @@ import java.util.stream.Collectors;
 
 @UtilityClass
 public class AccountGrpcMapper {
+
+    public LoginDto toLoginDto(LoginRequest loginRequest) {
+        return LoginDto.builder()
+                .username(loginRequest.getUsername())
+                .password(loginRequest.getPassword())
+                .build();
+    }
 
     public AddAccountDto toAddAccountDto(AddAccountRequest addAccountRequest) {
         return AddAccountDto.builder()

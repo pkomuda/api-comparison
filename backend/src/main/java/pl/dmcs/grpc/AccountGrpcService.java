@@ -16,6 +16,12 @@ public class AccountGrpcService extends AccountGrpc.AccountImplBase {
     private final AccountService accountService;
 
     @Override
+    public void login(LoginRequest request, StreamObserver<StringValue> responseObserver) {
+        responseObserver.onNext(StringValue.of(accountService.login(AccountGrpcMapper.toLoginDto(request))));
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void addAccount(AddAccountRequest request, StreamObserver<Empty> responseObserver) {
         accountService.addAccount(AccountGrpcMapper.toAddAccountDto(request));
         responseObserver.onCompleted();
