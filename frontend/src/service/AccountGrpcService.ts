@@ -7,6 +7,7 @@ import { RegisterDto } from "@dto/RegisterDto";
 import { account } from "@grpc/account";
 import { AccountService } from '@service/AccountService';
 import AccountClient = account.AccountClient;
+import GetAccountsRequest = account.GetAccountsRequest;
 import LoginRequest = account.LoginRequest;
 
 export class AccountGrpcService implements AccountService {
@@ -27,7 +28,7 @@ export class AccountGrpcService implements AccountService {
             this.accountClient.Login(new LoginRequest(loginDto), null, (error, response) => {
                 response ? resolve([response.value, null]) : resolve([null, error.message]);
             })
-        })
+        });
     }
 
     addAccount(addAccountDto: AddAccountDto): Promise<[boolean, string]> {
@@ -55,7 +56,17 @@ export class AccountGrpcService implements AccountService {
     }
 
     getAccounts(query: string, sort: string, dir: string, page: number, size: number): Promise<[AccountPagesDto, string]> {
-        return Promise.resolve([undefined, ""]);
+        const request = new GetAccountsRequest();
+        request.query = query;
+        request.sort = sort;
+        request.dir = dir;
+        request.page = page;
+        request.size = size;
+        return new Promise(resolve => {
+            this.accountClient.GetAccounts(request, null, (error, response) => {
+                response ? resolve([{content: response.content, totalSize: response.totalSize}, null]) : resolve([null, error.message]);
+            });
+        });
     }
 
     register(registerDto: RegisterDto): Promise<[boolean, string]> {

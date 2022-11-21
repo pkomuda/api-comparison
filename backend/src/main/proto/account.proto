@@ -56,6 +56,6 @@ message GetAccountsRequest {
 }
 
 message AccountPages {
-    repeated AccountDetails accounts = 1;
+    repeated AccountDetails content = 1;
     uint64 totalSize = 2;
 }

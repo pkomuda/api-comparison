@@ -58,7 +58,7 @@ public class AccountGrpcMapper {
 
     public AccountPages toAccountPages(Page<AccountDetailsDto> accountDetailsPages) {
         return AccountPages.newBuilder()
-                .addAllAccounts(accountDetailsPages.getContent().stream()
+                .addAllContent(accountDetailsPages.getContent().stream()
                         .map(AccountGrpcMapper::toAccountDetails)
                         .toList())
                 .setTotalSize(accountDetailsPages.getTotalSize())

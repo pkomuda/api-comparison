@@ -23,6 +23,7 @@ public class GrpcInterceptor implements ServerInterceptor {
                 try {
                     super.onHalfClose();
                 } catch (Exception e) {
+                    log.error("Handled exception", e);
                     if (e instanceof ApplicationException) {
                         serverCall.close(Status.INVALID_ARGUMENT.withDescription(e.getMessage()), metadata);
                     } else {

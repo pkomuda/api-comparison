@@ -761,24 +761,24 @@ export namespace account {
     export class AccountPages extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            accounts?: AccountDetails[];
+            content?: AccountDetails[];
             totalSize?: number;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("accounts" in data && data.accounts != undefined) {
-                    this.accounts = data.accounts;
+                if ("content" in data && data.content != undefined) {
+                    this.content = data.content;
                 }
                 if ("totalSize" in data && data.totalSize != undefined) {
                     this.totalSize = data.totalSize;
                 }
             }
         }
-        get accounts() {
+        get content() {
             return pb_1.Message.getRepeatedWrapperField(this, AccountDetails, 1) as AccountDetails[];
         }
-        set accounts(value: AccountDetails[]) {
+        set content(value: AccountDetails[]) {
             pb_1.Message.setRepeatedWrapperField(this, 1, value);
         }
         get totalSize() {
@@ -788,12 +788,12 @@ export namespace account {
             pb_1.Message.setField(this, 2, value);
         }
         static fromObject(data: {
-            accounts?: ReturnType<typeof AccountDetails.prototype.toObject>[];
+            content?: ReturnType<typeof AccountDetails.prototype.toObject>[];
             totalSize?: number;
         }): AccountPages {
             const message = new AccountPages({});
-            if (data.accounts != null) {
-                message.accounts = data.accounts.map(item => AccountDetails.fromObject(item));
+            if (data.content != null) {
+                message.content = data.content.map(item => AccountDetails.fromObject(item));
             }
             if (data.totalSize != null) {
                 message.totalSize = data.totalSize;
@@ -802,11 +802,11 @@ export namespace account {
         }
         toObject() {
             const data: {
-                accounts?: ReturnType<typeof AccountDetails.prototype.toObject>[];
+                content?: ReturnType<typeof AccountDetails.prototype.toObject>[];
                 totalSize?: number;
             } = {};
-            if (this.accounts != null) {
-                data.accounts = this.accounts.map((item: AccountDetails) => item.toObject());
+            if (this.content != null) {
+                data.content = this.content.map((item: AccountDetails) => item.toObject());
             }
             if (this.totalSize != null) {
                 data.totalSize = this.totalSize;
@@ -817,8 +817,8 @@ export namespace account {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.accounts.length)
-                writer.writeRepeatedMessage(1, this.accounts, (item: AccountDetails) => item.serialize(writer));
+            if (this.content.length)
+                writer.writeRepeatedMessage(1, this.content, (item: AccountDetails) => item.serialize(writer));
             if (this.totalSize != 0)
                 writer.writeUint64(2, this.totalSize);
             if (!w)
@@ -831,7 +831,7 @@ export namespace account {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.accounts, () => pb_1.Message.addToRepeatedWrapperField(message, 1, AccountDetails.deserialize(reader), AccountDetails));
+                        reader.readMessage(message.content, () => pb_1.Message.addToRepeatedWrapperField(message, 1, AccountDetails.deserialize(reader), AccountDetails));
                         break;
                     case 2:
                         message.totalSize = reader.readUint64();
