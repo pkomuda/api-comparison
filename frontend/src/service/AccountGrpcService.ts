@@ -1,15 +1,23 @@
-import { AccountDetailsDto } from "@dto/AccountDetailsDto";
-import { AccountPagesDto } from "@dto/AccountPagesDto";
-import { AddAccountDto } from "@dto/AddAccountDto";
-import { ChangePasswordDto } from "@dto/ChangePasswordDto";
+import { AccountDetailsDto } from '@dto/AccountDetailsDto';
+import { AccountPagesDto } from '@dto/AccountPagesDto';
+import { AddAccountDto } from '@dto/AddAccountDto';
+import { ChangePasswordDto } from '@dto/ChangePasswordDto';
 import { LoginDto } from '@dto/LoginDto';
-import { RegisterDto } from "@dto/RegisterDto";
-import { account } from "@grpc/account";
+import { RegisterDto } from '@dto/RegisterDto';
+import { account } from '@grpc/account';
+import { google as empty } from '@grpc/google/protobuf/empty';
+import { google as wrappers } from '@grpc/google/protobuf/wrappers';
 import { AccountService } from '@service/AccountService';
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie';
 import AccountClient = account.AccountClient;
+import AccountDetails = account.AccountDetails;
+import AddAccountRequest = account.AddAccountRequest;
+import ChangePasswordRequest = account.ChangePasswordRequest;
 import GetAccountsRequest = account.GetAccountsRequest;
 import LoginRequest = account.LoginRequest;
+import RegisterRequest = account.RegisterRequest;
+import Empty = empty.protobuf.Empty;
+import StringValue = wrappers.protobuf.StringValue;
 
 export class AccountGrpcService implements AccountService {
 
@@ -37,34 +45,74 @@ export class AccountGrpcService implements AccountService {
 
     login(loginDto: LoginDto): Promise<[string, string]> {
         return new Promise(resolve => {
-            this.accountClient.Login(new LoginRequest(loginDto), null, (error, response) => {
+            this.accountClient.Login(new LoginRequest(loginDto), this.metadata(), (error, response) => {
                 response ? resolve([response.value, null]) : resolve([null, error.message]);
             })
         });
     }
 
+    register(registerDto: RegisterDto): Promise<[boolean, string]> {
+        return new Promise(resolve => {
+            this.accountClient.Register(new RegisterRequest(registerDto), this.metadata(), (error, response) => {
+                response ? resolve([true, null]) : resolve([null, error.message]);
+            })
+        });
+    }
+
     addAccount(addAccountDto: AddAccountDto): Promise<[boolean, string]> {
-        return Promise.resolve([false, ""]);
+        return new Promise(resolve => {
+            this.accountClient.AddAccount(new AddAccountRequest(addAccountDto), this.metadata(), (error, response) => {
+                response ? resolve([true, null]) : resolve([null, error.message]);
+            })
+        });
     }
 
     changePassword(changePasswordDto: ChangePasswordDto): Promise<[boolean, string]> {
-        return Promise.resolve([false, ""]);
-    }
-
-    confirmAccount(token: string): Promise<[boolean, string]> {
-        return Promise.resolve([false, ""]);
+        return new Promise(resolve => {
+            this.accountClient.ChangePassword(new ChangePasswordRequest(changePasswordDto), this.metadata(), (error, response) => {
+                response ? resolve([true, null]) : resolve([null, error.message]);
+            })
+        });
     }
 
     deleteAccount(username: string): Promise<[boolean, string]> {
-        return Promise.resolve([false, ""]);
+        return new Promise(resolve => {
+            this.accountClient.DeleteAccount(new StringValue({value: username}), this.metadata(), (error, response) => {
+                response ? resolve([true, null]) : resolve([null, error.message]);
+            })
+        });
     }
 
     editAccount(username: string, accountDetailsDto: AccountDetailsDto): Promise<[boolean, string]> {
-        return Promise.resolve([false, ""]);
+        return new Promise(resolve => {
+            this.accountClient.EditAccount(new AccountDetails(accountDetailsDto), this.metadata(), (error, response) => {
+                response ? resolve([true, null]) : resolve([null, error.message]);
+            })
+        });
+    }
+
+    editOwnAccount(accountDetailsDto: AccountDetailsDto): Promise<[boolean, string]> {
+        return new Promise(resolve => {
+            this.accountClient.EditOwnAccount(new AccountDetails(accountDetailsDto), this.metadata(), (error, response) => {
+                response ? resolve([true, null]) : resolve([null, error.message]);
+            })
+        });
     }
 
     getAccount(username: string): Promise<[AccountDetailsDto, string]> {
-        return Promise.resolve([undefined, ""]);
+        return new Promise(resolve => {
+            this.accountClient.GetAccount(new StringValue({value: username}), this.metadata(), (error, response) => {
+                response ? resolve([response, null]) : resolve([null, error.message]);
+            })
+        });
+    }
+
+    getOwnAccount(): Promise<[AccountDetailsDto, string]> {
+        return new Promise(resolve => {
+            this.accountClient.GetOwnAccount(new Empty(), this.metadata(), (error, response) => {
+                response ? resolve([response, null]) : resolve([null, error.message]);
+            })
+        });
     }
 
     getAccounts(query: string, sort: string, dir: string, page: number, size: number): Promise<[AccountPagesDto, string]> {
@@ -79,9 +127,5 @@ export class AccountGrpcService implements AccountService {
                 response ? resolve([{content: response.content, totalSize: response.totalSize}, null]) : resolve([null, error.message]);
             });
         });
-    }
-
-    register(registerDto: RegisterDto): Promise<[boolean, string]> {
-        return Promise.resolve([false, ""]);
     }
 }

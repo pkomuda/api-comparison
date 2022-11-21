@@ -43,7 +43,6 @@ public class AccountMapper {
                 .firstName(account.getFirstName())
                 .lastName(account.getLastName())
                 .active(account.isActive())
-                .confirmed(account.isConfirmed())
                 .accessLevels(account.getAccessLevels().stream()
                         .filter(AccessLevel::isActive)
                         .map(AccessLevel::getName)

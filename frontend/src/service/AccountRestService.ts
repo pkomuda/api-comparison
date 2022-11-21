@@ -83,6 +83,11 @@ export class AccountRestService implements AccountService {
         return response.ok ? [await response.json() as AccountDetailsDto, null] : [null, await response.text()];
     }
 
+    async getOwnAccount(): Promise<[AccountDetailsDto, string]> {
+        const response = await this.get('/account');
+        return response.ok ? [await response.json() as AccountDetailsDto, null] : [null, await response.text()];
+    }
+
     async getAccounts(query: string, sort: string, dir: string, page: number, size: number): Promise<[AccountPagesDto, string]> {
         const response = await this.get(`/accounts?query=${query}&sort=${sort}&dir=${dir}&page=${page}&size=${size}`);
         return response.ok ? [await response.json() as AccountPagesDto, null] : [null, await response.text()];
@@ -93,6 +98,11 @@ export class AccountRestService implements AccountService {
         return response.ok ? [response.ok, null] : [null, await response.text()];
     }
 
+    async editOwnAccount(accountDetailsDto: AccountDetailsDto): Promise<[boolean, string]> {
+        const response = await this.put('/account', accountDetailsDto);
+        return response.ok ? [response.ok, null] : [null, await response.text()];
+    }
+
     async deleteAccount(username: string): Promise<[boolean, string]> {
         const response = await this.delete(`/account/${username}`);
         return response.ok ? [response.ok, null] : [null, await response.text()];
@@ -100,11 +110,6 @@ export class AccountRestService implements AccountService {
 
     async changePassword(changePasswordDto: ChangePasswordDto): Promise<[boolean, string]> {
         const response = await this.put('/changePassword', changePasswordDto);
-        return response.ok ? [response.ok, null] : [null, await response.text()];
-    }
-
-    async confirmAccount(token: string): Promise<[boolean, string]> {
-        const response = await this.put(`/confirm/${token}`, null);
         return response.ok ? [response.ok, null] : [null, await response.text()];
     }
 }

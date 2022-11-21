@@ -11,15 +11,30 @@ package account;
 
 service Account {
     rpc Login (LoginRequest) returns (google.protobuf.StringValue);
+    rpc Register (RegisterRequest) returns (google.protobuf.Empty);
     rpc AddAccount (AddAccountRequest) returns (google.protobuf.Empty);
     rpc GetAccount (google.protobuf.StringValue) returns (AccountDetails);
+    rpc GetOwnAccount (google.protobuf.Empty) returns (AccountDetails);
     rpc GetAllAccounts (google.protobuf.Empty) returns (AccountList);
     rpc GetAccounts (GetAccountsRequest) returns (AccountPages);
+    rpc EditAccount (AccountDetails) returns (google.protobuf.Empty);
+    rpc EditOwnAccount (AccountDetails) returns (google.protobuf.Empty);
+    rpc ChangePassword (ChangePasswordRequest) returns (google.protobuf.Empty);
+    rpc DeleteAccount (google.protobuf.StringValue) returns (google.protobuf.Empty);
 }
 
 message LoginRequest {
     string username = 1;
     string password = 2;
+}
+
+message RegisterRequest {
+    string username = 1;
+    string password = 2;
+    string confirmPassword = 3;
+    string email = 4;
+    string firstName = 5;
+    string lastName = 6;
 }
 
 message AddAccountRequest {
@@ -39,8 +54,7 @@ message AccountDetails {
     string firstName = 3;
     string lastName = 4;
     bool active = 5;
-    bool confirmed = 6;
-    repeated string accessLevels = 7;
+    repeated string accessLevels = 6;
 }
 
 message AccountList {
@@ -58,4 +72,11 @@ message GetAccountsRequest {
 message AccountPages {
     repeated AccountDetails content = 1;
     uint64 totalSize = 2;
+}
+
+message ChangePasswordRequest {
+    string username = 1;
+    string previousPassword = 2;
+    string password = 3;
+    string confirmPassword = 4;
 }

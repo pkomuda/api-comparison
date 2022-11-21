@@ -6,6 +6,5 @@ export class AccountDetailsDto {
     firstName: string;
     lastName: string;
     active: boolean;
-    confirmed: boolean;
     accessLevels: string[];
 }

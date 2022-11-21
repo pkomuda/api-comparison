@@ -11,9 +11,10 @@ export interface AccountService {
     register(registerDto: RegisterDto): Promise<[boolean, string]>;
     addAccount(addAccountDto: AddAccountDto): Promise<[boolean, string]>;
     getAccount(username: string): Promise<[AccountDetailsDto, string]>;
+    getOwnAccount(): Promise<[AccountDetailsDto, string]>;
     getAccounts(query: string, sort: string, dir: string, page: number, size: number): Promise<[AccountPagesDto, string]>;
     editAccount(username: string, accountDetailsDto: AccountDetailsDto): Promise<[boolean, string]>;
+    editOwnAccount(accountDetailsDto: AccountDetailsDto): Promise<[boolean, string]>;
     deleteAccount(username: string): Promise<[boolean, string]>;
     changePassword(changePasswordDto: ChangePasswordDto): Promise<[boolean, string]>;
-    confirmAccount(token: string): Promise<[boolean, string]>;
 }

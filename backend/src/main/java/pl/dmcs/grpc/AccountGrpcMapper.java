@@ -2,9 +2,7 @@ package pl.dmcs.grpc;
 
 import com.google.protobuf.ByteString;
 import lombok.experimental.UtilityClass;
-import pl.dmcs.dto.AccountDetailsDto;
-import pl.dmcs.dto.AddAccountDto;
-import pl.dmcs.dto.LoginDto;
+import pl.dmcs.dto.*;
 import pl.dmcs.util.Page;
 
 import java.util.List;
@@ -17,6 +15,17 @@ public class AccountGrpcMapper {
         return LoginDto.builder()
                 .username(loginRequest.getUsername())
                 .password(loginRequest.getPassword())
+                .build();
+    }
+
+    public RegisterDto toRegisterDto(RegisterRequest registerRequest) {
+        return RegisterDto.builder()
+                .username(registerRequest.getUsername())
+                .password(registerRequest.getPassword())
+                .confirmPassword(registerRequest.getConfirmPassword())
+                .email(registerRequest.getEmail())
+                .firstName(registerRequest.getFirstName())
+                .lastName(registerRequest.getLastName())
                 .build();
     }
 
@@ -36,6 +45,20 @@ public class AccountGrpcMapper {
                 .build();
     }
 
+    public AccountDetailsDto toAccountDetailsDto(AccountDetails accountDetails) {
+        return AccountDetailsDto.builder()
+                .username(accountDetails.getUsername())
+                .email(accountDetails.getEmail())
+                .firstName(accountDetails.getFirstName())
+                .lastName(accountDetails.getLastName())
+                .active(accountDetails.getActive())
+                .accessLevels(accountDetails.getAccessLevelsList()
+                        .asByteStringList().stream()
+                        .map(ByteString::toStringUtf8)
+                        .collect(Collectors.toSet()))
+                .build();
+    }
+
     public AccountDetails toAccountDetails(AccountDetailsDto accountDetailsDto) {
         return AccountDetails.newBuilder()
                 .setUsername(accountDetailsDto.getUsername())
@@ -43,7 +66,6 @@ public class AccountGrpcMapper {
                 .setFirstName(accountDetailsDto.getFirstName())
                 .setLastName(accountDetailsDto.getLastName())
                 .setActive(accountDetailsDto.isActive())
-                .setConfirmed(accountDetailsDto.isConfirmed())
                 .addAllAccessLevels(accountDetailsDto.getAccessLevels())
                 .build();
     }
@@ -62,6 +84,15 @@ public class AccountGrpcMapper {
                         .map(AccountGrpcMapper::toAccountDetails)
                         .toList())
                 .setTotalSize(accountDetailsPages.getTotalSize())
+                .build();
+    }
+
+    public ChangePasswordDto toChangePasswordDto(ChangePasswordRequest changePasswordRequest) {
+        return ChangePasswordDto.builder()
+                .username(changePasswordRequest.getUsername())
+                .previousPassword(changePasswordRequest.getPreviousPassword())
+                .password(changePasswordRequest.getPassword())
+                .confirmPassword(changePasswordRequest.getConfirmPassword())
                 .build();
     }
 }

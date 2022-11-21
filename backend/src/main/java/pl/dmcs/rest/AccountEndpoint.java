@@ -34,12 +34,6 @@ public class AccountEndpoint {
         accountService.register(registerDto);
     }
 
-    @PUT
-    @Path("/confirm/{token}")
-    public void confirmAccount(@PathParam("token") String token) {
-        accountService.confirmAccount(token);
-    }
-
     @POST
     @Path("/account")
     @RolesAllowed("admin")
@@ -57,7 +51,7 @@ public class AccountEndpoint {
     @GET
     @Path("/account")
     @RolesAllowed({"admin", "client"})
-    public AccountDetailsDto getAccount(@Context SecurityContext context) {
+    public AccountDetailsDto getOwnAccount(@Context SecurityContext context) {
         return accountService.getAccount(context.getUserPrincipal().getName());
     }
 
@@ -89,8 +83,8 @@ public class AccountEndpoint {
     @PUT
     @Path("/account")
     @RolesAllowed({"admin", "client"})
-    public void editAccount(@Context SecurityContext context, AccountDetailsDto accountDetailsDto) {
-        accountService.editAccount(context, accountDetailsDto);
+    public void editOwnAccount(@Context SecurityContext context, AccountDetailsDto accountDetailsDto) {
+        accountService.editOwnAccount(context.getUserPrincipal().getName(), accountDetailsDto);
     }
 
     @PUT

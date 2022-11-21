@@ -15,7 +15,6 @@ public class AccountDetailsDto {
     private String firstName;
     private String lastName;
     private boolean active;
-    private boolean confirmed;
 
     @SecureField(rolesAllowed = "admin")
     private Set<String> accessLevels;

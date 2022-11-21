@@ -8,6 +8,7 @@ import io.quarkus.grpc.RegisterInterceptor;
 import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
 import pl.dmcs.service.AccountService;
+import pl.dmcs.util.RequestContext;
 
 @Blocking
 @GrpcService
@@ -16,10 +17,17 @@ import pl.dmcs.service.AccountService;
 public class AccountGrpcService extends AccountGrpc.AccountImplBase {
 
     private final AccountService accountService;
+    private final RequestContext requestContext;
 
     @Override
     public void login(LoginRequest request, StreamObserver<StringValue> responseObserver) {
         responseObserver.onNext(StringValue.of(accountService.login(AccountGrpcMapper.toLoginDto(request))));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void register(RegisterRequest request, StreamObserver<Empty> responseObserver) {
+        accountService.register(AccountGrpcMapper.toRegisterDto(request));
         responseObserver.onCompleted();
     }
 
@@ -36,6 +44,12 @@ public class AccountGrpcService extends AccountGrpc.AccountImplBase {
     }
 
     @Override
+    public void getOwnAccount(Empty request, StreamObserver<AccountDetails> responseObserver) {
+        responseObserver.onNext(AccountGrpcMapper.toAccountDetails(accountService.getAccount(requestContext.getUsername())));
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void getAllAccounts(Empty request, StreamObserver<AccountList> responseObserver) {
         responseObserver.onNext(AccountGrpcMapper.toAccountList(accountService.getAllAccounts()));
         responseObserver.onCompleted();
@@ -46,6 +60,30 @@ public class AccountGrpcService extends AccountGrpc.AccountImplBase {
     public void getAccounts(GetAccountsRequest request, StreamObserver<AccountPages> responseObserver) {
         responseObserver.onNext(AccountGrpcMapper.toAccountPages(accountService.getAccounts(request.getQuery(),
                 request.getSort(), request.getDir(), request.getPage(), request.getSize())));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void editAccount(AccountDetails request, StreamObserver<Empty> responseObserver) {
+        accountService.editAccount(request.getUsername(), AccountGrpcMapper.toAccountDetailsDto(request));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void editOwnAccount(AccountDetails request, StreamObserver<Empty> responseObserver) {
+        accountService.editOwnAccount(request.getUsername(), AccountGrpcMapper.toAccountDetailsDto(request));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void changePassword(ChangePasswordRequest request, StreamObserver<Empty> responseObserver) {
+        accountService.changePassword(AccountGrpcMapper.toChangePasswordDto(request));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void deleteAccount(StringValue request, StreamObserver<Empty> responseObserver) {
+        accountService.deleteAccount(request.getValue());
         responseObserver.onCompleted();
     }
 }

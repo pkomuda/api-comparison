@@ -1,7 +1,6 @@
 import { AccountDetails } from "@component/AccountDetails";
 import { AddAccount } from '@component/AddAccount';
 import { ChangePassword } from "@component/ChangePassword";
-import { ConfirmAccount } from "@component/ConfirmAccount";
 import { EditAccount } from '@component/EditAccount';
 import { Home } from '@component/Home';
 import { Layout } from '@component/Layout';
@@ -35,7 +34,6 @@ export const App = () => {
                                 <Route path="/accounts" element={<ListAccounts/>}/>
                                 <Route path="/account" element={<AccountDetails/>}/>
                                 <Route path="/changePassword" element={<ChangePassword/>}/>
-                                <Route path="/confirm/:token" element={<ConfirmAccount/>}/>
                             </Routes>
                         </Layout>
                     </BrowserRouter>

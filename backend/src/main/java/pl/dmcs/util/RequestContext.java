@@ -9,4 +9,5 @@ import javax.enterprise.context.RequestScoped;
 public class RequestContext {
 
     private String authorization;
+    private String username;
 }

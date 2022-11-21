@@ -40,6 +40,7 @@ public class GrpcRolesAllowedInterceptor {
             throw new AuthorizationException();
         }
 
+        requestContext.setUsername(jwt.getName());
         return context.proceed();
     }
 }

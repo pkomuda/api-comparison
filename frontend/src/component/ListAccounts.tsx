@@ -107,12 +107,6 @@ export const ListAccounts = () => {
             render: active => <Checkbox checked={active}/>
         },
         {
-            title: 'Confirmed',
-            dataIndex: 'confirmed',
-            key: 'confirmed',
-            render: confirmed => <Checkbox checked={confirmed}/>
-        },
-        {
             render: (_, row) => (
                 <Popover
                     trigger="click"

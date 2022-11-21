@@ -1,8 +1,6 @@
 package pl.dmcs.service;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
-import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.Mailer;
 import io.smallrye.jwt.build.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -18,15 +16,14 @@ import pl.dmcs.util.Page;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.SecurityContext;
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
 import static pl.dmcs.entity.AccessLevel.ACCESS_LEVEL_CLIENT;
+import static pl.dmcs.entity.AccessLevel.ACCESS_LEVEL_NAMES;
 import static pl.dmcs.exception.ApplicationException.*;
 
 @ApplicationScoped
@@ -37,16 +34,11 @@ public class AccountService {
     @ConfigProperty(name = "mp.jwt.verify.issuer")
     String jwtIssuer;
 
-    @ConfigProperty(name = "frontend.url")
-    String frontendUrl;
-
     private final AccountRepository accountRepository;
-    private final Mailer mailer;
 
     public String login(LoginDto loginDto) {
         Account account = findAccount(loginDto.getUsername());
-        if (!account.isActive() || !account.isConfirmed()
-                || !BcryptUtil.matches(loginDto.getPassword(), account.getPassword())) {
+        if (!account.isActive() || !BcryptUtil.matches(loginDto.getPassword(), account.getPassword())) {
             throw new ApplicationException(LOGIN_FAILED);
         }
         return Jwt.issuer(jwtIssuer)
@@ -65,19 +57,8 @@ public class AccountService {
         }
         Account account = AccountMapper.toAccount(registerDto);
         account.setActive(true);
-        account.setConfirmed(false);
-        account.setConfirmationToken(UUID.randomUUID().toString());
         account.addAccessLevels(Set.of(ACCESS_LEVEL_CLIENT));
         addAccount(account);
-        mailer.send(Mail.withHtml(registerDto.getEmail(), "Confirm your account", """
-                Click <a href="%s/confirm/%s">here</a> to confirm your account
-                """.formatted(frontendUrl, account.getConfirmationToken())));
-    }
-
-    public void confirmAccount(String token) {
-        Account account = accountRepository.findByConfirmationToken(token)
-                .orElseThrow(() -> new ApplicationException(ACCOUNT_NOT_FOUND));
-        account.setConfirmed(true);
     }
 
     public void addAccount(AddAccountDto addAccountDto) {
@@ -85,7 +66,6 @@ public class AccountService {
             throw new ApplicationException(PASSWORDS_NOT_MATCHING);
         }
         Account account = AccountMapper.toAccount(addAccountDto);
-        account.setConfirmed(true);
         account.addAccessLevels(addAccountDto.getAccessLevels());
         addAccount(account);
     }
@@ -123,8 +103,8 @@ public class AccountService {
         });
     }
 
-    public void editAccount(SecurityContext context, AccountDetailsDto accountDetailsDto) {
-        if (!context.getUserPrincipal().getName().equals(accountDetailsDto.getUsername())) {
+    public void editOwnAccount(String username, AccountDetailsDto accountDetailsDto) {
+        if (!username.equals(accountDetailsDto.getUsername())) {
             throw new ApplicationException(USERNAMES_NOT_MATCHING);
         }
         Account account = findAccount(accountDetailsDto.getUsername());
@@ -145,7 +125,7 @@ public class AccountService {
 
     public void deleteAccount(String username) {
         Account account = findAccount(username);
-        account.deleteAccessLevels(AccessLevel.ACCESS_LEVEL_NAMES);
+        account.deleteAccessLevels(ACCESS_LEVEL_NAMES);
         accountRepository.deleteByUsername(username);
     }
 
