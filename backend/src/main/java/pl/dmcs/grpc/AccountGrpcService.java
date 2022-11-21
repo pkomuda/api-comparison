@@ -42,6 +42,7 @@ public class AccountGrpcService extends AccountGrpc.AccountImplBase {
     }
 
     @Override
+    @GrpcRolesAllowed("admin")
     public void getAccounts(GetAccountsRequest request, StreamObserver<AccountPages> responseObserver) {
         responseObserver.onNext(AccountGrpcMapper.toAccountPages(accountService.getAccounts(request.getQuery(),
                 request.getSort(), request.getDir(), request.getPage(), request.getSize())));

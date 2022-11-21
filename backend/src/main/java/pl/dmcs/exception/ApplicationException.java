@@ -10,10 +10,6 @@ public class ApplicationException extends RuntimeException {
     public static final String PASSWORDS_NOT_MATCHING = "Passwords are not matching";
     public static final String LOGIN_FAILED = "Login failed";
 
-    public ApplicationException() {
-        super(DEFAULT_ERROR);
-    }
-
     public ApplicationException(String message) {
         super(message);
     }

@@ -25,11 +25,11 @@ export class AccountRestService implements AccountService {
             return {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
-            }
+            };
         } else {
             return {
                 'Content-Type': 'application/json',
-            }
+            };
         }
     }
 

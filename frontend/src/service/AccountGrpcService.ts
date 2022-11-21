@@ -6,6 +6,7 @@ import { LoginDto } from '@dto/LoginDto';
 import { RegisterDto } from "@dto/RegisterDto";
 import { account } from "@grpc/account";
 import { AccountService } from '@service/AccountService';
+import Cookies from "js-cookie";
 import AccountClient = account.AccountClient;
 import GetAccountsRequest = account.GetAccountsRequest;
 import LoginRequest = account.LoginRequest;
@@ -23,7 +24,18 @@ export class AccountGrpcService implements AccountService {
         return this.instance ? this.instance : new AccountGrpcService();
     }
 
-    async login(loginDto: LoginDto): Promise<[string, string]> {
+    private metadata(): any {
+        const token = Cookies.get('token');
+        if (token) {
+            return {
+                'Authorization': `Bearer ${token}`
+            };
+        } else {
+            return {};
+        }
+    }
+
+    login(loginDto: LoginDto): Promise<[string, string]> {
         return new Promise(resolve => {
             this.accountClient.Login(new LoginRequest(loginDto), null, (error, response) => {
                 response ? resolve([response.value, null]) : resolve([null, error.message]);
@@ -63,7 +75,7 @@ export class AccountGrpcService implements AccountService {
         request.page = page;
         request.size = size;
         return new Promise(resolve => {
-            this.accountClient.GetAccounts(request, null, (error, response) => {
+            this.accountClient.GetAccounts(request, this.metadata(), (error, response) => {
                 response ? resolve([{content: response.content, totalSize: response.totalSize}, null]) : resolve([null, error.message]);
             });
         });
