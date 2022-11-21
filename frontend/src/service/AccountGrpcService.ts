@@ -23,10 +23,11 @@ export class AccountGrpcService implements AccountService {
     }
 
     async login(loginDto: LoginDto): Promise<[string, string]> {
-        console.log('grpc login');
-        const request = new LoginRequest(loginDto);
-        this.accountClient.Login(request, null, (error, response) => {console.log(response.value)});
-        return null;
+        return new Promise(resolve => {
+            this.accountClient.Login(new LoginRequest(loginDto), null, (error, response) => {
+                response ? resolve([response.value, null]) : resolve([null, error.message]);
+            })
+        })
     }
 
     addAccount(addAccountDto: AddAccountDto): Promise<[boolean, string]> {

@@ -4,6 +4,7 @@ import com.google.protobuf.Empty;
 import com.google.protobuf.StringValue;
 import io.grpc.stub.StreamObserver;
 import io.quarkus.grpc.GrpcService;
+import io.quarkus.grpc.RegisterInterceptor;
 import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
 import pl.dmcs.service.AccountService;
@@ -11,6 +12,7 @@ import pl.dmcs.service.AccountService;
 @Blocking
 @GrpcService
 @RequiredArgsConstructor
+@RegisterInterceptor(GrpcInterceptor.class)
 public class AccountGrpcService extends AccountGrpc.AccountImplBase {
 
     private final AccountService accountService;
