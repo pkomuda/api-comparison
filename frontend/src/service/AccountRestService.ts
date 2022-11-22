@@ -1,7 +1,7 @@
 import { AccountDetailsDto } from '@dto/AccountDetailsDto';
 import { AccountPagesDto } from '@dto/AccountPagesDto';
 import { AddAccountDto } from '@dto/AddAccountDto';
-import { ChangePasswordDto } from "@dto/ChangePasswordDto";
+import { ChangePasswordDto } from '@dto/ChangePasswordDto';
 import { LoginDto } from '@dto/LoginDto';
 import { RegisterDto } from '@dto/RegisterDto';
 import { AccountService } from '@service/AccountService';
@@ -68,14 +68,14 @@ export class AccountRestService implements AccountService {
         return response.ok ? [await response.text(), null] : [null, await response.text()];
     }
 
-    async register(registerDto: RegisterDto): Promise<[boolean, string]> {
+    async register(registerDto: RegisterDto): Promise<[AccountDetailsDto, string]> {
         const response = await this.post('/register', registerDto);
-        return response.ok ? [response.ok, null] : [null, await response.text()];
+        return response.ok ? [await response.json() as AccountDetailsDto, null] : [null, await response.text()];
     }
 
-    async addAccount(addAccountDto: AddAccountDto): Promise<[boolean, string]> {
+    async addAccount(addAccountDto: AddAccountDto): Promise<[AccountDetailsDto, string]> {
         const response = await this.post('/account', addAccountDto);
-        return response.ok ? [response.ok, null] : [null, await response.text()];
+        return response.ok ? [await response.json() as AccountDetailsDto, null] : [null, await response.text()];
     }
 
     async getAccount(username: string): Promise<[AccountDetailsDto, string]> {
@@ -93,23 +93,23 @@ export class AccountRestService implements AccountService {
         return response.ok ? [await response.json() as AccountPagesDto, null] : [null, await response.text()];
     }
 
-    async editAccount(username: string, accountDetailsDto: AccountDetailsDto): Promise<[boolean, string]> {
+    async editAccount(username: string, accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
         const response = await this.put(`/account/${username}`, accountDetailsDto);
-        return response.ok ? [response.ok, null] : [null, await response.text()];
+        return response.ok ? [await response.json() as AccountDetailsDto, null] : [null, await response.text()];
     }
 
-    async editOwnAccount(accountDetailsDto: AccountDetailsDto): Promise<[boolean, string]> {
+    async editOwnAccount(accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
         const response = await this.put('/account', accountDetailsDto);
-        return response.ok ? [response.ok, null] : [null, await response.text()];
+        return response.ok ? [await response.json() as AccountDetailsDto, null] : [null, await response.text()];
     }
 
-    async changePassword(changePasswordDto: ChangePasswordDto): Promise<[boolean, string]> {
+    async changePassword(changePasswordDto: ChangePasswordDto): Promise<[AccountDetailsDto, string]> {
         const response = await this.put('/password', changePasswordDto);
-        return response.ok ? [response.ok, null] : [null, await response.text()];
+        return response.ok ? [await response.json() as AccountDetailsDto, null] : [null, await response.text()];
     }
 
-    async deleteAccount(username: string): Promise<[boolean, string]> {
+    async deleteAccount(username: string): Promise<[string, string]> {
         const response = await this.delete(`/account/${username}`);
-        return response.ok ? [response.ok, null] : [null, await response.text()];
+        return response.ok ? [await response.text(), null] : [null, await response.text()];
     }
 }

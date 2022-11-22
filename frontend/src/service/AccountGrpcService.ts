@@ -51,18 +51,18 @@ export class AccountGrpcService implements AccountService {
         });
     }
 
-    register(registerDto: RegisterDto): Promise<[boolean, string]> {
+    register(registerDto: RegisterDto): Promise<[AccountDetailsDto, string]> {
         return new Promise(resolve => {
             this.accountClient.Register(new RegisterRequest(registerDto), this.metadata(), (error, response) => {
-                response ? resolve([true, null]) : resolve([null, error.message]);
+                response ? resolve([response.toObject() as AccountDetailsDto, null]) : resolve([null, error.message]);
             })
         });
     }
 
-    addAccount(addAccountDto: AddAccountDto): Promise<[boolean, string]> {
+    addAccount(addAccountDto: AddAccountDto): Promise<[AccountDetailsDto, string]> {
         return new Promise(resolve => {
             this.accountClient.AddAccount(new AddAccountRequest(addAccountDto), this.metadata(), (error, response) => {
-                response ? resolve([true, null]) : resolve([null, error.message]);
+                response ? resolve([response.toObject() as AccountDetailsDto, null]) : resolve([null, error.message]);
             })
         });
     }
@@ -97,34 +97,34 @@ export class AccountGrpcService implements AccountService {
         });
     }
 
-    editAccount(username: string, accountDetailsDto: AccountDetailsDto): Promise<[boolean, string]> {
+    editAccount(username: string, accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
         return new Promise(resolve => {
             this.accountClient.EditAccount(new AccountDetails(accountDetailsDto), this.metadata(), (error, response) => {
-                response ? resolve([true, null]) : resolve([null, error.message]);
+                response ? resolve([response.toObject() as AccountDetailsDto, null]) : resolve([null, error.message]);
             })
         });
     }
 
-    editOwnAccount(accountDetailsDto: AccountDetailsDto): Promise<[boolean, string]> {
+    editOwnAccount(accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
         return new Promise(resolve => {
             this.accountClient.EditOwnAccount(new AccountDetails(accountDetailsDto), this.metadata(), (error, response) => {
-                response ? resolve([true, null]) : resolve([null, error.message]);
+                response ? resolve([response.toObject() as AccountDetailsDto, null]) : resolve([null, error.message]);
             })
         });
     }
 
-    changePassword(changePasswordDto: ChangePasswordDto): Promise<[boolean, string]> {
+    changePassword(changePasswordDto: ChangePasswordDto): Promise<[AccountDetailsDto, string]> {
         return new Promise(resolve => {
             this.accountClient.ChangePassword(new ChangePasswordRequest(changePasswordDto), this.metadata(), (error, response) => {
-                response ? resolve([true, null]) : resolve([null, error.message]);
+                response ? resolve([response.toObject() as AccountDetailsDto, null]) : resolve([null, error.message]);
             })
         });
     }
 
-    deleteAccount(username: string): Promise<[boolean, string]> {
+    deleteAccount(username: string): Promise<[string, string]> {
         return new Promise(resolve => {
             this.accountClient.DeleteAccount(new StringValue({value: username}), this.metadata(), (error, response) => {
-                response ? resolve([true, null]) : resolve([null, error.message]);
+                response ? resolve([response.value, null]) : resolve([null, error.message]);
             })
         });
     }

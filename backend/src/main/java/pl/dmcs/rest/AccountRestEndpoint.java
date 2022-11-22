@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AccountEndpoint {
+public class AccountRestEndpoint {
 
     private final AccountService accountService;
 
@@ -30,15 +30,15 @@ public class AccountEndpoint {
 
     @POST
     @Path("/register")
-    public void register(RegisterDto registerDto) {
-        accountService.register(registerDto);
+    public AccountDetailsDto register(RegisterDto registerDto) {
+        return accountService.register(registerDto);
     }
 
     @POST
     @Path("/account")
     @RolesAllowed("admin")
-    public void addAccount(AddAccountDto addAccountDto) {
-        accountService.addAccount(addAccountDto);
+    public AccountDetailsDto addAccount(AddAccountDto addAccountDto) {
+        return accountService.addAccount(addAccountDto);
     }
 
     @GET
@@ -76,28 +76,28 @@ public class AccountEndpoint {
     @PUT
     @Path("/account/{username}")
     @RolesAllowed("admin")
-    public void editAccount(@PathParam("username") String username, AccountDetailsDto accountDetailsDto) {
-        accountService.editAccount(username, accountDetailsDto);
+    public AccountDetailsDto editAccount(@PathParam("username") String username, AccountDetailsDto accountDetailsDto) {
+        return accountService.editAccount(username, accountDetailsDto);
     }
 
     @PUT
     @Path("/account")
     @RolesAllowed({"admin", "client"})
-    public void editOwnAccount(@Context SecurityContext context, AccountDetailsDto accountDetailsDto) {
-        accountService.editOwnAccount(context.getUserPrincipal().getName(), accountDetailsDto);
+    public AccountDetailsDto editOwnAccount(@Context SecurityContext context, AccountDetailsDto accountDetailsDto) {
+        return accountService.editOwnAccount(context.getUserPrincipal().getName(), accountDetailsDto);
     }
 
     @PUT
     @Path("/password")
     @RolesAllowed({"admin", "client"})
-    public void changePassword(@Context SecurityContext context, ChangePasswordDto changePasswordDto) {
-        accountService.changePassword(context.getUserPrincipal().getName(), changePasswordDto);
+    public AccountDetailsDto changePassword(@Context SecurityContext context, ChangePasswordDto changePasswordDto) {
+        return accountService.changePassword(context.getUserPrincipal().getName(), changePasswordDto);
     }
 
     @DELETE
     @Path("/account/{username}")
     @RolesAllowed("admin")
-    public void deleteAccount(@PathParam("username") String username) {
-        accountService.deleteAccount(username);
+    public String deleteAccount(@PathParam("username") String username) {
+        return accountService.deleteAccount(username);
     }
 }

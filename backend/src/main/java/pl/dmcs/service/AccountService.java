@@ -51,7 +51,7 @@ public class AccountService {
                 .sign();
     }
 
-    public void register(RegisterDto registerDto) {
+    public AccountDetailsDto register(RegisterDto registerDto) {
         if (!registerDto.getPassword().equals(registerDto.getConfirmPassword())) {
             throw new ApplicationException(PASSWORDS_NOT_MATCHING);
         }
@@ -63,15 +63,17 @@ public class AccountService {
             account.addAllAccessLevels(Set.of(ACCESS_LEVEL_CLIENT));
         }
         addAccount(account);
+        return AccountMapper.toAccountDetailsDto(account);
     }
 
-    public void addAccount(AddAccountDto addAccountDto) {
+    public AccountDetailsDto addAccount(AddAccountDto addAccountDto) {
         if (!addAccountDto.getPassword().equals(addAccountDto.getConfirmPassword())) {
             throw new ApplicationException(PASSWORDS_NOT_MATCHING);
         }
         Account account = AccountMapper.toAccount(addAccountDto);
         account.addAllAccessLevels(addAccountDto.getAccessLevels());
         addAccount(account);
+        return AccountMapper.toAccountDetailsDto(account);
     }
 
     public AccountDetailsDto getAccount(String username) {
@@ -87,7 +89,7 @@ public class AccountService {
                 .map(AccountMapper::toAccountDetailsDto);
     }
 
-    public void editAccount(String username, AccountDetailsDto accountDetailsDto) {
+    public AccountDetailsDto editAccount(String username, AccountDetailsDto accountDetailsDto) {
         if (!username.equals(accountDetailsDto.getUsername())) {
             throw new ApplicationException(USERNAMES_NOT_MATCHING);
         }
@@ -100,18 +102,20 @@ public class AccountService {
         account.setActive(accountDetailsDto.isActive());
         account.getAccessLevels().forEach(accessLevel ->
                 accessLevel.setActive(accountDetailsDto.getAccessLevels().contains(accessLevel.getName())));
+        return AccountMapper.toAccountDetailsDto(account);
     }
 
-    public void editOwnAccount(String username, AccountDetailsDto accountDetailsDto) {
+    public AccountDetailsDto editOwnAccount(String username, AccountDetailsDto accountDetailsDto) {
         if (!username.equals(accountDetailsDto.getUsername())) {
             throw new ApplicationException(USERNAMES_NOT_MATCHING);
         }
         Account account = findAccount(accountDetailsDto.getUsername());
         account.setFirstName(accountDetailsDto.getFirstName());
         account.setLastName(accountDetailsDto.getLastName());
+        return AccountMapper.toAccountDetailsDto(account);
     }
 
-    public void changePassword(String username, ChangePasswordDto changePasswordDto) {
+    public AccountDetailsDto changePassword(String username, ChangePasswordDto changePasswordDto) {
         if (!changePasswordDto.getPassword().equals(changePasswordDto.getConfirmPassword())) {
             throw new ApplicationException(PASSWORDS_NOT_MATCHING);
         }
@@ -120,12 +124,14 @@ public class AccountService {
             throw new ApplicationException(PASSWORDS_NOT_MATCHING);
         }
         account.setPassword(BcryptUtil.bcryptHash(changePasswordDto.getPassword()));
+        return AccountMapper.toAccountDetailsDto(account);
     }
 
-    public void deleteAccount(String username) {
+    public String deleteAccount(String username) {
         Account account = findAccount(username);
         account.deleteAllAccessLevels();
         accountRepository.deleteByUsername(username);
+        return username;
     }
 
     private void addAccount(Account account) {

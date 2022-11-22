@@ -11,16 +11,16 @@ package account;
 
 service Account {
     rpc Login (LoginRequest) returns (google.protobuf.StringValue);
-    rpc Register (RegisterRequest) returns (google.protobuf.Empty);
-    rpc AddAccount (AddAccountRequest) returns (google.protobuf.Empty);
+    rpc Register (RegisterRequest) returns (AccountDetails);
+    rpc AddAccount (AddAccountRequest) returns (AccountDetails);
     rpc GetAccount (google.protobuf.StringValue) returns (AccountDetails);
     rpc GetOwnAccount (google.protobuf.Empty) returns (AccountDetails);
     rpc GetAllAccounts (google.protobuf.Empty) returns (AccountList);
     rpc GetAccounts (GetAccountsRequest) returns (AccountPages);
-    rpc EditAccount (AccountDetails) returns (google.protobuf.Empty);
-    rpc EditOwnAccount (AccountDetails) returns (google.protobuf.Empty);
-    rpc ChangePassword (ChangePasswordRequest) returns (google.protobuf.Empty);
-    rpc DeleteAccount (google.protobuf.StringValue) returns (google.protobuf.Empty);
+    rpc EditAccount (AccountDetails) returns (AccountDetails);
+    rpc EditOwnAccount (AccountDetails) returns (AccountDetails);
+    rpc ChangePassword (ChangePasswordRequest) returns (AccountDetails);
+    rpc DeleteAccount (google.protobuf.StringValue) returns (google.protobuf.StringValue);
 }
 
 message LoginRequest {

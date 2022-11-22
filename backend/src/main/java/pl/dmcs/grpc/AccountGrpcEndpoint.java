@@ -14,7 +14,7 @@ import pl.dmcs.util.RequestContext;
 @GrpcService
 @RequiredArgsConstructor
 @RegisterInterceptor(GrpcInterceptor.class)
-public class AccountGrpcService extends AccountGrpc.AccountImplBase {
+public class AccountGrpcEndpoint extends AccountGrpc.AccountImplBase {
 
     private final AccountService accountService;
     private final RequestContext requestContext;
@@ -26,17 +26,15 @@ public class AccountGrpcService extends AccountGrpc.AccountImplBase {
     }
 
     @Override
-    public void register(RegisterRequest request, StreamObserver<Empty> responseObserver) {
-        accountService.register(AccountGrpcMapper.toRegisterDto(request));
-        responseObserver.onNext(Empty.getDefaultInstance());
+    public void register(RegisterRequest request, StreamObserver<AccountDetails> responseObserver) {
+        responseObserver.onNext(AccountGrpcMapper.toAccountDetails(accountService.register(AccountGrpcMapper.toRegisterDto(request))));
         responseObserver.onCompleted();
     }
 
     @Override
     @GrpcRolesAllowed("admin")
-    public void addAccount(AddAccountRequest request, StreamObserver<Empty> responseObserver) {
-        accountService.addAccount(AccountGrpcMapper.toAddAccountDto(request));
-        responseObserver.onNext(Empty.getDefaultInstance());
+    public void addAccount(AddAccountRequest request, StreamObserver<AccountDetails> responseObserver) {
+        responseObserver.onNext(AccountGrpcMapper.toAccountDetails(accountService.addAccount(AccountGrpcMapper.toAddAccountDto(request))));
         responseObserver.onCompleted();
     }
 
@@ -71,33 +69,29 @@ public class AccountGrpcService extends AccountGrpc.AccountImplBase {
 
     @Override
     @GrpcRolesAllowed("admin")
-    public void editAccount(AccountDetails request, StreamObserver<Empty> responseObserver) {
-        accountService.editAccount(request.getUsername(), AccountGrpcMapper.toAccountDetailsDto(request));
-        responseObserver.onNext(Empty.getDefaultInstance());
+    public void editAccount(AccountDetails request, StreamObserver<AccountDetails> responseObserver) {
+        responseObserver.onNext(AccountGrpcMapper.toAccountDetails(accountService.editAccount(request.getUsername(), AccountGrpcMapper.toAccountDetailsDto(request))));
         responseObserver.onCompleted();
     }
 
     @Override
     @GrpcRolesAllowed({"admin", "client"})
-    public void editOwnAccount(AccountDetails request, StreamObserver<Empty> responseObserver) {
-        accountService.editOwnAccount(requestContext.getUsername(), AccountGrpcMapper.toAccountDetailsDto(request));
-        responseObserver.onNext(Empty.getDefaultInstance());
+    public void editOwnAccount(AccountDetails request, StreamObserver<AccountDetails> responseObserver) {
+        responseObserver.onNext(AccountGrpcMapper.toAccountDetails(accountService.editOwnAccount(requestContext.getUsername(), AccountGrpcMapper.toAccountDetailsDto(request))));
         responseObserver.onCompleted();
     }
 
     @Override
     @GrpcRolesAllowed({"admin", "client"})
-    public void changePassword(ChangePasswordRequest request, StreamObserver<Empty> responseObserver) {
-        accountService.changePassword(requestContext.getUsername(), AccountGrpcMapper.toChangePasswordDto(request));
-        responseObserver.onNext(Empty.getDefaultInstance());
+    public void changePassword(ChangePasswordRequest request, StreamObserver<AccountDetails> responseObserver) {
+        responseObserver.onNext(AccountGrpcMapper.toAccountDetails(accountService.changePassword(requestContext.getUsername(), AccountGrpcMapper.toChangePasswordDto(request))));
         responseObserver.onCompleted();
     }
 
     @Override
     @GrpcRolesAllowed("admin")
-    public void deleteAccount(StringValue request, StreamObserver<Empty> responseObserver) {
-        accountService.deleteAccount(request.getValue());
-        responseObserver.onNext(Empty.getDefaultInstance());
+    public void deleteAccount(StringValue request, StreamObserver<StringValue> responseObserver) {
+        responseObserver.onNext(StringValue.of(accountService.deleteAccount(request.getValue())));
         responseObserver.onCompleted();
     }
 }
