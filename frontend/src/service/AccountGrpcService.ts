@@ -67,19 +67,33 @@ export class AccountGrpcService implements AccountService {
         });
     }
 
-    changePassword(changePasswordDto: ChangePasswordDto): Promise<[boolean, string]> {
+    getAccount(username: string): Promise<[AccountDetailsDto, string]> {
         return new Promise(resolve => {
-            this.accountClient.ChangePassword(new ChangePasswordRequest(changePasswordDto), this.metadata(), (error, response) => {
-                response ? resolve([true, null]) : resolve([null, error.message]);
+            this.accountClient.GetAccount(new StringValue({value: username}), this.metadata(), (error, response) => {
+                response ? resolve([response.toObject() as AccountDetailsDto, null]) : resolve([null, error.message]);
             })
         });
     }
 
-    deleteAccount(username: string): Promise<[boolean, string]> {
+    getOwnAccount(): Promise<[AccountDetailsDto, string]> {
         return new Promise(resolve => {
-            this.accountClient.DeleteAccount(new StringValue({value: username}), this.metadata(), (error, response) => {
-                response ? resolve([true, null]) : resolve([null, error.message]);
+            this.accountClient.GetOwnAccount(new Empty(), this.metadata(), (error, response) => {
+                response ? resolve([response.toObject() as AccountDetailsDto, null]) : resolve([null, error.message]);
             })
+        });
+    }
+
+    getAccounts(query: string, sort: string, dir: string, page: number, size: number): Promise<[AccountPagesDto, string]> {
+        const request = new GetAccountsRequest();
+        request.query = query;
+        request.sort = sort;
+        request.dir = dir;
+        request.page = page;
+        request.size = size;
+        return new Promise(resolve => {
+            this.accountClient.GetAccounts(request, this.metadata(), (error, response) => {
+                response ? resolve([response.toObject() as AccountPagesDto, null]) : resolve([null, error.message]);
+            });
         });
     }
 
@@ -99,33 +113,19 @@ export class AccountGrpcService implements AccountService {
         });
     }
 
-    getAccount(username: string): Promise<[AccountDetailsDto, string]> {
+    changePassword(changePasswordDto: ChangePasswordDto): Promise<[boolean, string]> {
         return new Promise(resolve => {
-            this.accountClient.GetAccount(new StringValue({value: username}), this.metadata(), (error, response) => {
-                response ? resolve([response, null]) : resolve([null, error.message]);
+            this.accountClient.ChangePassword(new ChangePasswordRequest(changePasswordDto), this.metadata(), (error, response) => {
+                response ? resolve([true, null]) : resolve([null, error.message]);
             })
         });
     }
 
-    getOwnAccount(): Promise<[AccountDetailsDto, string]> {
+    deleteAccount(username: string): Promise<[boolean, string]> {
         return new Promise(resolve => {
-            this.accountClient.GetOwnAccount(new Empty(), this.metadata(), (error, response) => {
-                response ? resolve([response, null]) : resolve([null, error.message]);
+            this.accountClient.DeleteAccount(new StringValue({value: username}), this.metadata(), (error, response) => {
+                response ? resolve([true, null]) : resolve([null, error.message]);
             })
-        });
-    }
-
-    getAccounts(query: string, sort: string, dir: string, page: number, size: number): Promise<[AccountPagesDto, string]> {
-        const request = new GetAccountsRequest();
-        request.query = query;
-        request.sort = sort;
-        request.dir = dir;
-        request.page = page;
-        request.size = size;
-        return new Promise(resolve => {
-            this.accountClient.GetAccounts(request, this.metadata(), (error, response) => {
-                response ? resolve([{content: response.content, totalSize: response.totalSize}, null]) : resolve([null, error.message]);
-            });
         });
     }
 }

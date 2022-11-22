@@ -28,28 +28,34 @@ public class AccountGrpcService extends AccountGrpc.AccountImplBase {
     @Override
     public void register(RegisterRequest request, StreamObserver<Empty> responseObserver) {
         accountService.register(AccountGrpcMapper.toRegisterDto(request));
+        responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
+    @GrpcRolesAllowed("admin")
     public void addAccount(AddAccountRequest request, StreamObserver<Empty> responseObserver) {
         accountService.addAccount(AccountGrpcMapper.toAddAccountDto(request));
+        responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
+    @GrpcRolesAllowed("admin")
     public void getAccount(StringValue request, StreamObserver<AccountDetails> responseObserver) {
         responseObserver.onNext(AccountGrpcMapper.toAccountDetails(accountService.getAccount(request.getValue())));
         responseObserver.onCompleted();
     }
 
     @Override
+    @GrpcRolesAllowed({"admin", "client"})
     public void getOwnAccount(Empty request, StreamObserver<AccountDetails> responseObserver) {
         responseObserver.onNext(AccountGrpcMapper.toAccountDetails(accountService.getAccount(requestContext.getUsername())));
         responseObserver.onCompleted();
     }
 
     @Override
+    @GrpcRolesAllowed("admin")
     public void getAllAccounts(Empty request, StreamObserver<AccountList> responseObserver) {
         responseObserver.onNext(AccountGrpcMapper.toAccountList(accountService.getAllAccounts()));
         responseObserver.onCompleted();
@@ -64,26 +70,34 @@ public class AccountGrpcService extends AccountGrpc.AccountImplBase {
     }
 
     @Override
+    @GrpcRolesAllowed("admin")
     public void editAccount(AccountDetails request, StreamObserver<Empty> responseObserver) {
         accountService.editAccount(request.getUsername(), AccountGrpcMapper.toAccountDetailsDto(request));
+        responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
+    @GrpcRolesAllowed({"admin", "client"})
     public void editOwnAccount(AccountDetails request, StreamObserver<Empty> responseObserver) {
-        accountService.editOwnAccount(request.getUsername(), AccountGrpcMapper.toAccountDetailsDto(request));
+        accountService.editOwnAccount(requestContext.getUsername(), AccountGrpcMapper.toAccountDetailsDto(request));
+        responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
+    @GrpcRolesAllowed({"admin", "client"})
     public void changePassword(ChangePasswordRequest request, StreamObserver<Empty> responseObserver) {
-        accountService.changePassword(AccountGrpcMapper.toChangePasswordDto(request));
+        accountService.changePassword(requestContext.getUsername(), AccountGrpcMapper.toChangePasswordDto(request));
+        responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
+    @GrpcRolesAllowed("admin")
     public void deleteAccount(StringValue request, StreamObserver<Empty> responseObserver) {
         accountService.deleteAccount(request.getValue());
+        responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 }

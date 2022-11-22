@@ -89,7 +89,6 @@ public class AccountGrpcMapper {
 
     public ChangePasswordDto toChangePasswordDto(ChangePasswordRequest changePasswordRequest) {
         return ChangePasswordDto.builder()
-                .username(changePasswordRequest.getUsername())
                 .previousPassword(changePasswordRequest.getPreviousPassword())
                 .password(changePasswordRequest.getPassword())
                 .confirmPassword(changePasswordRequest.getConfirmPassword())

@@ -1,20 +1,13 @@
-import { AuthContext } from "@context/AuthContext";
-import { AddAccountDto } from "@dto/AddAccountDto";
-import { ChangePasswordDto } from "@dto/ChangePasswordDto";
+import { ChangePasswordDto } from '@dto/ChangePasswordDto';
 import { AccountServiceFactory } from '@service/AccountServiceFactory';
 import { Button, Form, Input, message, PageHeader } from 'antd';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const ChangePassword = () => {
 
     const navigate = useNavigate();
-    const [auth, ] = useContext(AuthContext);
-    const [changePasswordDto, setChangePasswordDto] = useState<ChangePasswordDto>(() => {
-        const dto = new ChangePasswordDto();
-        dto.username = auth.upn;
-        return dto;
-    });
+    const [changePasswordDto, setChangePasswordDto] = useState<ChangePasswordDto>(new ChangePasswordDto());
     const accountService = AccountServiceFactory.getAccountService();
 
     const onFinish = async () => {

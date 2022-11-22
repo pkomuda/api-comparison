@@ -9,6 +9,8 @@ import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
+import static pl.dmcs.entity.AccessLevel.ACCESS_LEVEL_NAMES;
+
 @Data
 @Entity
 @Builder
@@ -44,18 +46,16 @@ public class Account extends PanacheEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "account")
     private Set<AccessLevel> accessLevels = new HashSet<>();
 
-    public void addAccessLevels(Set<String> names) {
-        AccessLevel.ACCESS_LEVEL_NAMES.forEach(name -> accessLevels.add(AccessLevel.builder()
+    public void addAllAccessLevels(Set<String> names) {
+        ACCESS_LEVEL_NAMES.forEach(name -> accessLevels.add(AccessLevel.builder()
                 .name(name)
                 .active(names.contains(name))
                 .account(this)
                 .build()));
     }
 
-    public void deleteAccessLevels(Set<String> names) {
-        accessLevels.stream()
-                .filter(accessLevel -> names.contains(accessLevel.getName()))
-                .forEach(accessLevel -> accessLevel.setAccount(null));
-        accessLevels.removeIf(accessLevel -> names.contains(accessLevel.getName()));
+    public void deleteAllAccessLevels() {
+        accessLevels.forEach(accessLevel -> accessLevel.setAccount(null));
+        accessLevels.clear();
     }
 }

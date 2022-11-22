@@ -57,7 +57,11 @@ public class AccountService {
         }
         Account account = AccountMapper.toAccount(registerDto);
         account.setActive(true);
-        account.addAccessLevels(Set.of(ACCESS_LEVEL_CLIENT));
+        if (accountRepository.count() == 0) {
+            account.addAllAccessLevels(ACCESS_LEVEL_NAMES);
+        } else {
+            account.addAllAccessLevels(Set.of(ACCESS_LEVEL_CLIENT));
+        }
         addAccount(account);
     }
 
@@ -66,7 +70,7 @@ public class AccountService {
             throw new ApplicationException(PASSWORDS_NOT_MATCHING);
         }
         Account account = AccountMapper.toAccount(addAccountDto);
-        account.addAccessLevels(addAccountDto.getAccessLevels());
+        account.addAllAccessLevels(addAccountDto.getAccessLevels());
         addAccount(account);
     }
 
@@ -94,13 +98,8 @@ public class AccountService {
         account.setFirstName(accountDetailsDto.getFirstName());
         account.setLastName(accountDetailsDto.getLastName());
         account.setActive(accountDetailsDto.isActive());
-        account.getAccessLevels().forEach(accessLevel -> {
-            if (accountDetailsDto.getAccessLevels().contains(accessLevel.getName()) && !accessLevel.isActive()) {
-                accessLevel.setActive(true);
-            } else if (!accountDetailsDto.getAccessLevels().contains(accessLevel.getName()) && accessLevel.isActive()) {
-                accessLevel.setActive(false);
-            }
-        });
+        account.getAccessLevels().forEach(accessLevel ->
+                accessLevel.setActive(accountDetailsDto.getAccessLevels().contains(accessLevel.getName())));
     }
 
     public void editOwnAccount(String username, AccountDetailsDto accountDetailsDto) {
@@ -112,11 +111,11 @@ public class AccountService {
         account.setLastName(accountDetailsDto.getLastName());
     }
 
-    public void changePassword(ChangePasswordDto changePasswordDto) {
+    public void changePassword(String username, ChangePasswordDto changePasswordDto) {
         if (!changePasswordDto.getPassword().equals(changePasswordDto.getConfirmPassword())) {
             throw new ApplicationException(PASSWORDS_NOT_MATCHING);
         }
-        Account account = findAccount(changePasswordDto.getUsername());
+        Account account = findAccount(username);
         if (!BcryptUtil.matches(changePasswordDto.getPreviousPassword(), account.getPassword())) {
             throw new ApplicationException(PASSWORDS_NOT_MATCHING);
         }
@@ -125,7 +124,7 @@ public class AccountService {
 
     public void deleteAccount(String username) {
         Account account = findAccount(username);
-        account.deleteAccessLevels(ACCESS_LEVEL_NAMES);
+        account.deleteAllAccessLevels();
         accountRepository.deleteByUsername(username);
     }
 

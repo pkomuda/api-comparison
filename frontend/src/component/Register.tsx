@@ -13,7 +13,7 @@ export const Register = () => {
     const onFinish = async () => {
         const [data, error] = await accountService.register(registerDto);
         if (data) {
-            message.success('Confirmation email has been sent');
+            message.success('Registered successfully');
             navigate('/', {replace: true});
         }
         if (error) {

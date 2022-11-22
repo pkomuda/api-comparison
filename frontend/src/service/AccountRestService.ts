@@ -103,13 +103,13 @@ export class AccountRestService implements AccountService {
         return response.ok ? [response.ok, null] : [null, await response.text()];
     }
 
-    async deleteAccount(username: string): Promise<[boolean, string]> {
-        const response = await this.delete(`/account/${username}`);
+    async changePassword(changePasswordDto: ChangePasswordDto): Promise<[boolean, string]> {
+        const response = await this.put('/password', changePasswordDto);
         return response.ok ? [response.ok, null] : [null, await response.text()];
     }
 
-    async changePassword(changePasswordDto: ChangePasswordDto): Promise<[boolean, string]> {
-        const response = await this.put('/changePassword', changePasswordDto);
+    async deleteAccount(username: string): Promise<[boolean, string]> {
+        const response = await this.delete(`/account/${username}`);
         return response.ok ? [response.ok, null] : [null, await response.text()];
     }
 }

@@ -11,7 +11,7 @@ export const AccountDetails = () => {
     const accountService = AccountServiceFactory.getAccountService()
 
     const getAccount = useCallback(async () => {
-        const [data, ] = await accountService.getAccount('');
+        const [data, ] = await accountService.getOwnAccount();
         setAccountDetailsDto(data);
         form.setFieldsValue(data)
     }, []);
@@ -21,7 +21,7 @@ export const AccountDetails = () => {
     }, [getAccount]);
 
     const onFinish = async () => {
-        const [data, error] = await accountService.editAccount('', accountDetailsDto);
+        const [data, error] = await accountService.editOwnAccount(accountDetailsDto);
         if (data) {
             message.success('Account edited successfully');
         }

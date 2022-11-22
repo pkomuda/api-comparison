@@ -7,7 +7,6 @@ import lombok.Data;
 @Builder
 public class ChangePasswordDto {
 
-    private String username;
     private String previousPassword;
     private String password;
     private String confirmPassword;

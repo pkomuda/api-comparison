@@ -88,10 +88,10 @@ public class AccountEndpoint {
     }
 
     @PUT
-    @Path("/changePassword")
+    @Path("/password")
     @RolesAllowed({"admin", "client"})
-    public void changePassword(ChangePasswordDto changePasswordDto) {
-        accountService.changePassword(changePasswordDto);
+    public void changePassword(@Context SecurityContext context, ChangePasswordDto changePasswordDto) {
+        accountService.changePassword(context.getUserPrincipal().getName(), changePasswordDto);
     }
 
     @DELETE

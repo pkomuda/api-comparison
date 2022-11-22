@@ -75,8 +75,7 @@ message AccountPages {
 }
 
 message ChangePasswordRequest {
-    string username = 1;
-    string previousPassword = 2;
-    string password = 3;
-    string confirmPassword = 4;
+    string previousPassword = 1;
+    string password = 2;
+    string confirmPassword = 3;
 }
