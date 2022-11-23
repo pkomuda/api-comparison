@@ -13,7 +13,7 @@ export interface AccountService {
     getAccount(username: string): Promise<[AccountDetailsDto, string]>;
     getOwnAccount(): Promise<[AccountDetailsDto, string]>;
     getAccounts(query: string, sort: string, dir: string, page: number, size: number): Promise<[AccountPagesDto, string]>;
-    editAccount(username: string, accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]>;
+    editAccount(accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]>;
     editOwnAccount(accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]>;
     changePassword(changePasswordDto: ChangePasswordDto): Promise<[AccountDetailsDto, string]>;
     deleteAccount(username: string): Promise<[string, string]>;

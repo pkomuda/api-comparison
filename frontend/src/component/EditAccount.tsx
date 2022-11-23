@@ -24,7 +24,7 @@ export const EditAccount = () => {
     }, [getAccount]);
 
     const onFinish = async () => {
-        const [data, error] = await accountService.editAccount(username, accountDetailsDto);
+        const [data, error] = await accountService.editAccount(accountDetailsDto);
         if (data) {
             message.success('Account edited successfully');
             navigate('/accounts', {replace: true});

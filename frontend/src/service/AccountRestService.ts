@@ -93,8 +93,8 @@ export class AccountRestService implements AccountService {
         return response.ok ? [await response.json() as AccountPagesDto, null] : [null, await response.text()];
     }
 
-    async editAccount(username: string, accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
-        const response = await this.put(`/account/${username}`, accountDetailsDto);
+    async editAccount(accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
+        const response = await this.put(`/account/${accountDetailsDto.username}`, accountDetailsDto);
         return response.ok ? [await response.json() as AccountDetailsDto, null] : [null, await response.text()];
     }
 

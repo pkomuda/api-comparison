@@ -97,7 +97,7 @@ export class AccountGrpcService implements AccountService {
         });
     }
 
-    editAccount(username: string, accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
+    editAccount(accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
         return new Promise(resolve => {
             this.accountClient.EditAccount(new AccountDetails(accountDetailsDto), this.metadata(), (error, response) => {
                 response ? resolve([response.toObject() as AccountDetailsDto, null]) : resolve([null, error.message]);

@@ -12,8 +12,8 @@ export const AccountDetails = () => {
 
     const getAccount = useCallback(async () => {
         const [data, ] = await accountService.getOwnAccount();
-        setAccountDetailsDto(data);
-        form.setFieldsValue(data);
+        setAccountDetailsDto({...data, active: true});
+        form.setFieldsValue({...data, active: true});
     }, []);
 
     useEffect(() => {

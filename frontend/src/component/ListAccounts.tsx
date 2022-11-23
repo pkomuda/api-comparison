@@ -23,10 +23,11 @@ export const ListAccounts = () => {
     const getAccounts = useCallback(async () => {
         const [data, ] = await accountService.getAccounts(query, sort, dir, page - 1, size);
         if (data) {
-            data.content.forEach((account, index) => {
-                account.key = size * (page - 1) + index + 1;
-            });
-            setAccountPagesDto(data);
+            const accounts = data.content.map((account, index) => ({
+                ...account,
+                key: size * (page - 1) + index + 1
+            }));
+            setAccountPagesDto({content: accounts, totalSize: data.totalSize});
         }
     }, [query, sort, dir, page, size]);
 
@@ -114,7 +115,7 @@ export const ListAccounts = () => {
                     content={
                         <div>
                             <Button type="link" onClick={() => {
-                                navigate(`/editAccount/${row.username}`, {replace: true})
+                                navigate(`/account/${row.username}`, {replace: true})
                             }}>
                                 Edit
                             </Button>

@@ -15,7 +15,9 @@ export class AccountGraphqlService implements AccountService {
 
     private constructor() {
         this.client = new ApolloClient({
-            cache: new InMemoryCache(),
+            cache: new InMemoryCache({
+                addTypename: false
+            }),
             uri: 'http://localhost:8080/graphql'
         });
     }
@@ -57,10 +59,7 @@ export class AccountGraphqlService implements AccountService {
             const response = await this.client.mutate({
                 mutation: gql`mutation register($registerDto: RegisterDtoInput) {
                     register(registerDto: $registerDto) {
-                        username
-                        email
-                        firstName
-                        lastName
+                        username email firstName lastName
                     }
                 }`,
                 variables: {registerDto: registerDto},
@@ -77,12 +76,7 @@ export class AccountGraphqlService implements AccountService {
             const response = await this.client.mutate({
                 mutation: gql`mutation addAccount($addAccountDto: AddAccountDtoInput) {
                     addAccount(addAccountDto: $addAccountDto) {
-                        username
-                        email
-                        firstName
-                        lastName
-                        active
-                        accessLevels
+                        username email firstName lastName active accessLevels
                     }
                 }`,
                 variables: {addAccountDto: addAccountDto},
@@ -99,12 +93,7 @@ export class AccountGraphqlService implements AccountService {
             const response = await this.client.query({
                 query: gql`query account($username: String) {
                     account(username: $username) {
-                        username
-                        email
-                        firstName
-                        lastName
-                        active
-                        accessLevels
+                        username email firstName lastName active accessLevels
                     }
                 }`,
                 variables: {username: username},
@@ -121,10 +110,7 @@ export class AccountGraphqlService implements AccountService {
             const response = await this.client.query({
                 query: gql`query ownAccount {
                     ownAccount {
-                        username
-                        email
-                        firstName
-                        lastName
+                        username email firstName lastName
                     }
                 }`,
                 context: this.context()
@@ -136,22 +122,89 @@ export class AccountGraphqlService implements AccountService {
     }
 
     async getAccounts(query: string, sort: string, dir: string, page: number, size: number): Promise<[AccountPagesDto, string]> {
-        return Promise.resolve([undefined, '']);
+        try {
+            const response = await this.client.query({
+                query: gql`query accounts($query: String, $sort: String, $dir: String, $page: Int!, $size: Int!) {
+                    accounts(query: $query, sort: $sort, dir: $dir, page: $page, size: $size) {
+                        content {
+                            username email firstName lastName active accessLevels
+                        }
+                        totalSize
+                    }
+                }`,
+                variables: {query: query, sort: sort, dir: dir, page: page, size: size},
+                context: this.context(),
+                fetchPolicy: 'no-cache'
+            });
+            return [response.data.accounts as AccountPagesDto, null];
+        } catch (error) {
+            return [null, (error as Error).message];
+        }
     }
 
-    async editAccount(username: string, accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
-        return Promise.resolve([undefined, '']);
+    async editAccount(accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
+        try {
+            const response = await this.client.mutate({
+                mutation: gql`mutation editAccount($accountDetailsDto: AccountDetailsDtoInput) {
+                    editAccount(accountDetailsDto: $accountDetailsDto) {
+                        username email firstName lastName active accessLevels
+                    }
+                }`,
+                variables: {accountDetailsDto: accountDetailsDto},
+                context: this.context()
+            });
+            return [response.data.editAccount as AccountDetailsDto, null];
+        } catch (error) {
+            return [null, (error as Error).message];
+        }
     }
 
     async editOwnAccount(accountDetailsDto: AccountDetailsDto): Promise<[AccountDetailsDto, string]> {
-        return Promise.resolve([undefined, '']);
+        try {
+            const response = await this.client.mutate({
+                mutation: gql`mutation editOwnAccount($accountDetailsDto: AccountDetailsDtoInput) {
+                    editOwnAccount(accountDetailsDto: $accountDetailsDto) {
+                        username email firstName lastName
+                    }
+                }`,
+                variables: {accountDetailsDto: accountDetailsDto},
+                context: this.context()
+            });
+            return [response.data.editOwnAccount as AccountDetailsDto, null];
+        } catch (error) {
+            return [null, (error as Error).message];
+        }
     }
 
     async changePassword(changePasswordDto: ChangePasswordDto): Promise<[AccountDetailsDto, string]> {
-        return Promise.resolve([undefined, '']);
+        try {
+            const response = await this.client.mutate({
+                mutation: gql`mutation changePassword($changePasswordDto: ChangePasswordDtoInput) {
+                    changePassword(changePasswordDto: $changePasswordDto) {
+                        username email firstName lastName
+                    }
+                }`,
+                variables: {changePasswordDto: changePasswordDto},
+                context: this.context()
+            });
+            return [response.data.changePassword as AccountDetailsDto, null];
+        } catch (error) {
+            return [null, (error as Error).message];
+        }
     }
 
     async deleteAccount(username: string): Promise<[string, string]> {
-        return Promise.resolve(['', '']);
+        try {
+            const response = await this.client.mutate({
+                mutation: gql`mutation deleteAccount($username: String) {
+                    deleteAccount(username: $username)
+                }`,
+                variables: {username: username},
+                context: this.context()
+            });
+            return [response.data.deleteAccount as string, null];
+        } catch (error) {
+            return [null, (error as Error).message];
+        }
     }
 }

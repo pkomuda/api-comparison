@@ -93,7 +93,7 @@ public class AccountService {
         if (!username.equals(accountDetailsDto.getUsername())) {
             throw new ApplicationException(USERNAMES_NOT_MATCHING);
         }
-        if (accountDetailsDto.getAccessLevels().isEmpty()) {
+        if (accountDetailsDto.getAccessLevels() == null || accountDetailsDto.getAccessLevels().isEmpty()) {
             throw new ApplicationException(ACCESS_LEVELS_EMPTY);
         }
         Account account = findAccount(accountDetailsDto.getUsername());
