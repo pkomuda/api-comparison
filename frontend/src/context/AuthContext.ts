@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import jwt_decode from 'jwt-decode';
-import React, { Dispatch, SetStateAction } from 'react';
+import { createContext, Dispatch, SetStateAction } from 'react';
 
 export interface Token {
     upn: string;
@@ -29,4 +29,4 @@ export const getTokenFromCookie = (): Token => {
     }
 }
 
-export const AuthContext = React.createContext<[Token, Dispatch<SetStateAction<Token>>]>([getTokenFromCookie(), () => {}]);
+export const AuthContext = createContext<[Token, Dispatch<SetStateAction<Token>>]>([getTokenFromCookie(), () => {}]);

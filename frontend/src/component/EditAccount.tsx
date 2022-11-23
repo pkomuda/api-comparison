@@ -2,7 +2,7 @@ import { AccountDetailsDto } from '@dto/AccountDetailsDto';
 import { AccountServiceFactory } from '@service/AccountServiceFactory';
 import { Button, Form, Input, message, PageHeader, Select, SelectProps, Switch } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const EditAccount = () => {
@@ -46,7 +46,7 @@ export const EditAccount = () => {
     ];
 
     return (
-        <React.Fragment>
+        <Fragment>
             <PageHeader
                 className="site-page-header"
                 title="Edit account"
@@ -139,6 +139,6 @@ export const EditAccount = () => {
                     <Button type="primary" htmlType="submit">Submit</Button>
                 </Form.Item>
             </Form>
-        </React.Fragment>
+        </Fragment>
     );
 };

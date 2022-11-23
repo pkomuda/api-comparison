@@ -2,7 +2,7 @@ import { AccountDetailsDto } from '@dto/AccountDetailsDto';
 import { AccountServiceFactory } from '@service/AccountServiceFactory';
 import { Button, Form, Input, message, PageHeader } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 
 export const AccountDetails = () => {
 
@@ -31,7 +31,7 @@ export const AccountDetails = () => {
     };
 
     return (
-        <React.Fragment>
+        <Fragment>
             <PageHeader
                 className="site-page-header"
                 title="Account details"
@@ -100,6 +100,6 @@ export const AccountDetails = () => {
                     <Button type="primary" htmlType="submit">Submit</Button>
                 </Form.Item>
             </Form>
-        </React.Fragment>
+        </Fragment>
     );
 };

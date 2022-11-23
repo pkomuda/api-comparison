@@ -1,11 +1,14 @@
-import { AccountDetails } from "@component/AccountDetails";
+import { AccountDetails } from '@component/AccountDetails';
 import { AddAccount } from '@component/AddAccount';
-import { ChangePassword } from "@component/ChangePassword";
+import { ChangePassword } from '@component/ChangePassword';
 import { EditAccount } from '@component/EditAccount';
+import { Error } from '@component/Error';
+import { ErrorBoundary } from '@component/ErrorBoundary';
 import { Home } from '@component/Home';
 import { Layout } from '@component/Layout';
 import { ListAccounts } from '@component/ListAccounts';
 import { Login } from '@component/Login';
+import { PrivateRoute } from '@component/PrivateRoute';
 import { Register } from '@component/Register';
 import { AccessLevel, AccessLevelContext, getAccessLevelFromToken } from '@context/AccessLevelContext';
 import { Api, ApiContext, getApiFromLocalStorage } from '@context/ApiContext';
@@ -24,18 +27,25 @@ export const App = () => {
             <AccessLevelContext.Provider value={accessLevel}>
                 <ApiContext.Provider value={api}>
                     <BrowserRouter>
-                        <Layout>
-                            <Routes>
-                                <Route path="/" element={<Home/>}/>
-                                <Route path="/login" element={<Login/>}/>
-                                <Route path="/register" element={<Register/>}/>
-                                <Route path="/addAccount" element={<AddAccount/>}/>
-                                <Route path="/account/:username" element={<EditAccount/>}/>
-                                <Route path="/accounts" element={<ListAccounts/>}/>
-                                <Route path="/account" element={<AccountDetails/>}/>
-                                <Route path="/changePassword" element={<ChangePassword/>}/>
-                            </Routes>
-                        </Layout>
+                        <ErrorBoundary>
+                            <Layout>
+                                <Routes>
+                                    <Route path="/" element={<Home/>}/>
+                                    <Route path="/login" element={<Login/>}/>
+                                    <Route path="/register" element={<Register/>}/>
+
+                                    <Route path="/account" element={<PrivateRoute accessLevels={["admin", "client"]}><AccountDetails/></PrivateRoute>}/>
+                                    <Route path="/changePassword" element={<PrivateRoute accessLevels={["admin", "client"]}><ChangePassword/></PrivateRoute>}/>
+
+                                    <Route path="/addAccount" element={<PrivateRoute accessLevels={["admin"]}><AddAccount/></PrivateRoute>}/>
+                                    <Route path="/accounts" element={<PrivateRoute accessLevels={["admin"]}><ListAccounts/></PrivateRoute>}/>
+                                    <Route path="/account/:username" element={<PrivateRoute accessLevels={["admin"]}><EditAccount/></PrivateRoute>}/>
+
+                                    <Route path="/error" element={<Error status={500} description={"Sorry, something went wrong."}/>}/>
+                                    <Route path="/*" element={<Error status={404} description={"Sorry, the page you visited does not exist."}/>}/>
+                                </Routes>
+                            </Layout>
+                        </ErrorBoundary>
                     </BrowserRouter>
                 </ApiContext.Provider>
             </AccessLevelContext.Provider>

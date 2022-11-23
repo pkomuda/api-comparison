@@ -1,7 +1,7 @@
 import { AddAccountDto } from '@dto/AddAccountDto';
 import { AccountServiceFactory } from '@service/AccountServiceFactory';
 import { Button, Form, Input, message, PageHeader, Select, SelectProps, Switch } from 'antd';
-import React, { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const AddAccount = () => {
@@ -38,7 +38,7 @@ export const AddAccount = () => {
     ];
 
     return (
-        <React.Fragment>
+        <Fragment>
             <PageHeader
                 className="site-page-header"
                 title="Add account"
@@ -163,6 +163,6 @@ export const AddAccount = () => {
                     <Button type="primary" htmlType="submit">Submit</Button>
                 </Form.Item>
             </Form>
-        </React.Fragment>
+        </Fragment>
     );
 };

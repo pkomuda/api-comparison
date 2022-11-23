@@ -1,7 +1,7 @@
 import { RegisterDto } from '@dto/RegisterDto';
 import { AccountServiceFactory } from '@service/AccountServiceFactory';
 import { Button, Form, Input, message, PageHeader } from 'antd';
-import React, { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const Register = () => {
@@ -22,7 +22,7 @@ export const Register = () => {
     };
 
     return (
-        <React.Fragment>
+        <Fragment>
             <PageHeader
                 className="site-page-header"
                 title="Register"
@@ -121,6 +121,6 @@ export const Register = () => {
                     <Button type="primary" htmlType="submit">Submit</Button>
                 </Form.Item>
             </Form>
-        </React.Fragment>
+        </Fragment>
     );
 };

@@ -1,7 +1,7 @@
 import { ChangePasswordDto } from '@dto/ChangePasswordDto';
 import { AccountServiceFactory } from '@service/AccountServiceFactory';
 import { Button, Form, Input, message, PageHeader } from 'antd';
-import React, { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const ChangePassword = () => {
@@ -22,7 +22,7 @@ export const ChangePassword = () => {
     };
 
     return (
-        <React.Fragment>
+        <Fragment>
             <PageHeader
                 className="site-page-header"
                 title="Change password"
@@ -89,6 +89,6 @@ export const ChangePassword = () => {
                     <Button type="primary" htmlType="submit">Submit</Button>
                 </Form.Item>
             </Form>
-        </React.Fragment>
+        </Fragment>
     );
 };

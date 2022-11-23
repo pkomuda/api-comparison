@@ -1,5 +1,5 @@
 import { Token } from '@context/AuthContext';
-import React, { Dispatch, SetStateAction } from 'react';
+import { createContext, Dispatch, SetStateAction } from 'react';
 
 const accessLevelNames = ['admin', 'client', ''] as const;
 export type AccessLevel = typeof accessLevelNames[number];
@@ -14,4 +14,4 @@ export const getAccessLevelFromToken = (auth: [Token, Dispatch<SetStateAction<To
     }
 };
 
-export const AccessLevelContext = React.createContext<[AccessLevel, Dispatch<SetStateAction<AccessLevel>>]>(['', () => {}]);
+export const AccessLevelContext = createContext<[AccessLevel, Dispatch<SetStateAction<AccessLevel>>]>(['', () => {}]);

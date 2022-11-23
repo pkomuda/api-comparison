@@ -6,12 +6,12 @@ import type { MenuProps } from 'antd';
 import { Layout as AntLayout, Menu } from 'antd';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import Cookies from 'js-cookie';
-import React, { useContext } from 'react';
+import { createElement, ReactNode, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const { Header, Content, Sider } = AntLayout;
 
-export const Layout = (props: { children: React.ReactElement }) => {
+export const Layout = (props: {children: ReactNode}) => {
 
     const navigate = useNavigate();
     const [auth, setAuth] = useContext(AuthContext);
@@ -91,7 +91,7 @@ export const Layout = (props: { children: React.ReactElement }) => {
     const getSideItems = (): MenuProps['items'] => {
         const user = {
             key: 'user',
-            icon: React.createElement(UserOutlined),
+            icon: createElement(UserOutlined),
             label: auth.upn || 'Guest',
             children: getUserItems(),
         };

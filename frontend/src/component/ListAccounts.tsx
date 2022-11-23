@@ -5,7 +5,7 @@ import { AccountServiceFactory } from '@service/AccountServiceFactory';
 import { Button, Checkbox, Input, message, PageHeader, Popover, Table, TablePaginationConfig } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { FilterValue, SorterResult, SortOrder } from 'antd/es/table/interface';
-import React, { useCallback, useEffect, useState } from 'react';
+import { createElement, Fragment, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export const ListAccounts = () => {
@@ -137,14 +137,14 @@ export const ListAccounts = () => {
     ];
 
     return (
-        <React.Fragment>
+        <Fragment>
             <PageHeader
                 className="site-page-header"
                 title="Accounts"
             />
             <Input autoFocus
                    value={query}
-                   addonBefore={React.createElement(SearchOutlined)}
+                   addonBefore={createElement(SearchOutlined)}
                    onChange={event => handleChangeQuery(event.target.value)}
             />
             <Table
@@ -159,6 +159,6 @@ export const ListAccounts = () => {
                     showQuickJumper: true
                 }}
             />
-        </React.Fragment>
+        </Fragment>
     );
 };
