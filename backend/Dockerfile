@@ -1,11 +1,14 @@
 FROM quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:22.3-java17 AS build
-COPY --chown=quarkus:quarkus mvnw /code/mvnw
-COPY --chown=quarkus:quarkus .mvn /code/.mvn
-COPY --chown=quarkus:quarkus pom.xml /code/
+USER root
+RUN microdnf --best install openssl
+COPY --chown=quarkus:quarkus ./ /code/
 USER quarkus
 WORKDIR /code
 RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.3.0:go-offline
-COPY src /code/src
+RUN openssl genrsa -out rsaPrivateKey.pem 2048
+RUN openssl rsa -pubout -in rsaPrivateKey.pem -out publicKey.pem
+RUN openssl pkcs8 -topk8 -nocrypt -inform pem -in rsaPrivateKey.pem -outform pem -out privateKey.pem
+RUN mv -t src/main/resources/ publicKey.pem privateKey.pem
 RUN ./mvnw package -Pnative
 
 FROM quay.io/quarkus/quarkus-micro-image:2.0
