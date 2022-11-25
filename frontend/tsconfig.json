@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "strictPropertyInitialization": false,
         "strictNullChecks": false,
         "target": "ESNext",
         "useDefineForClassFields": true,
@@ -23,6 +22,8 @@
             "@context/*": ["context/*"],
             "@dto/*": ["dto/*"],
             "@grpc/*": ["grpc/*"],
+            "@image/*": ["image/*"],
+            "@page/*": ["page/*"],
             "@service/*": ["service/*"]
         }
     },

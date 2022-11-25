@@ -1,18 +1,18 @@
-import { AccountDetails } from '@component/AccountDetails';
-import { AddAccount } from '@component/AddAccount';
-import { ChangePassword } from '@component/ChangePassword';
-import { EditAccount } from '@component/EditAccount';
 import { Error } from '@component/Error';
 import { ErrorBoundary } from '@component/ErrorBoundary';
-import { Home } from '@component/Home';
 import { Layout } from '@component/Layout';
-import { ListAccounts } from '@component/ListAccounts';
-import { Login } from '@component/Login';
 import { PrivateRoute } from '@component/PrivateRoute';
-import { Register } from '@component/Register';
 import { AccessLevel, AccessLevelContext, getAccessLevelFromToken } from '@context/AccessLevelContext';
 import { Api, ApiContext, getApiFromLocalStorage } from '@context/ApiContext';
 import { AuthContext, getTokenFromCookie, Token } from '@context/AuthContext';
+import { AccountDetails } from '@page/AccountDetails';
+import { AddAccount } from '@page/AddAccount';
+import { ChangePassword } from '@page/ChangePassword';
+import { EditAccount } from '@page/EditAccount';
+import { Home } from '@page/Home';
+import { ListAccounts } from '@page/ListAccounts';
+import { Login } from '@page/Login';
+import { Register } from '@page/Register';
 import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 

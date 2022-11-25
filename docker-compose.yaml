@@ -1,18 +1,41 @@
-version: "3"
-
 services:
+  database:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
-    image: quarkus/api-comparison-jvm
+    image: backend
     build:
       context: backend
-      dockerfile: src/main/docker/Dockerfile.jvm
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - 8080:8080
+      - 9000:9000
+    depends_on:
+      database:
+        condition: service_healthy
+
+  frontend:
+    image: frontend
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - 80:80
 
   proxy:
-    image: envoy
+    image: proxy
     build:
       context: proxy
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - 8000:8000

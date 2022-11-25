@@ -2,6 +2,7 @@ import { SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { AccessLevel, AccessLevelContext } from '@context/AccessLevelContext';
 import { Api, ApiContext } from '@context/ApiContext';
 import { AuthContext } from '@context/AuthContext';
+import favicon from '@image/favicon.svg';
 import type { MenuProps } from 'antd';
 import { Layout as AntLayout, Menu } from 'antd';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
@@ -162,7 +163,7 @@ export const Layout = (props: {children: ReactNode}) => {
         <AntLayout style={{minHeight: '100vh'}}>
             <Header className="header">
                 <Link to="/" className="logo">
-                    <img src="src/image/favicon.svg" alt="logo" width="48px" height="48px"/>
+                    <img src={favicon} alt="logo" width="48px" height="48px"/>
                     <span>API Comparison</span>
                 </Link>
                 <Menu theme="dark" mode="horizontal" items={topItems} selectedKeys={[api]} disabledOverflow/>

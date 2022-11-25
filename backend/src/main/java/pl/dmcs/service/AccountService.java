@@ -31,9 +31,6 @@ import static pl.dmcs.exception.ApplicationException.*;
 @Transactional(REQUIRES_NEW)
 public class AccountService {
 
-    @ConfigProperty(name = "mp.jwt.verify.issuer")
-    String jwtIssuer;
-
     private final AccountRepository accountRepository;
 
     public String login(LoginDto loginDto) {
@@ -41,7 +38,7 @@ public class AccountService {
         if (!account.isActive() || !BcryptUtil.matches(loginDto.getPassword(), account.getPassword())) {
             throw new ApplicationException(LOGIN_FAILED);
         }
-        return Jwt.issuer(jwtIssuer)
+        return Jwt.issuer("backend")
                 .upn(account.getUsername())
                 .groups(account.getAccessLevels().stream()
                         .filter(AccessLevel::isActive)
